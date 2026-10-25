@@ -1,0 +1,10 @@
+import 'dotenv/config';
+process.env.DEMO_MODE??='true';
+import {connectDatabase} from './db.js';
+import {app,expire} from './app.js';
+import {Organizer} from './models.js';
+import {seed} from './scripts/seed-data.js';
+await connectDatabase();
+if(!await Organizer.exists({})&&process.env.DEMO_MODE==='true')await seed();
+const timer=setInterval(()=>expire().catch(console.error),60000);timer.unref();
+app.listen(process.env.PORT||4000,()=>console.log(`FoodBridge API http://localhost:${process.env.PORT||4000}`));

@@ -1,0 +1,4 @@
+export async function api(path:string,body?:unknown){const response=await fetch(`/api${path}`,body===undefined?undefined:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json();if(!response.ok)throw new Error(data.error+(data.details?' — check the entered fields.':''));return data;}
+export const time=(date:string)=>new Date(date).toLocaleTimeString('en-IN',{hour:'numeric',minute:'2-digit',timeZone:'Asia/Kolkata'});
+export function left(date:string){const minutes=Math.max(0,Math.floor((+new Date(date)-Date.now())/60000));return minutes?`${Math.floor(minutes/60)?`${Math.floor(minutes/60)}h `:''}${minutes%60}m left`:'Deadline passed';}
+export const photo=(type='Wedding')=>type.includes('Concert')?'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=700&q=80':'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=900&q=85';
