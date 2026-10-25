@@ -6,6 +6,7 @@ import {Organizer,Ngo,Listing,Pickup,Notification} from './models.js';
 import {config} from './config.js';
 import {eligibility,match,urgency} from './services/matching.js';
 import {seed} from './scripts/seed-data.js';
+process.env.DEMO_MODE ??= 'true';
 export const app=express();
 app.use(cors({origin:(process.env.CLIENT_ORIGIN||'http://localhost:5173').split(',')}));app.use(express.json({limit:'100kb'}));
 const route=fn=>(req,res,next)=>Promise.resolve(fn(req,res)).catch(next);
