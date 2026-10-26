@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const {Schema}=mongoose;
+/** Reusable embedded geospatial sub-schema shared by organizers, NGOs, and listings. */
 const location={lat:{type:Number,required:true},lng:{type:Number,required:true},address:{type:String,required:true}};
 export const Organizer=mongoose.model('Organizer',new Schema({name:String,type:String,phone:String,location}));
 export const Ngo=mongoose.model('Ngo',new Schema({name:String,location,dailyCapacityMeals:Number,remainingCapacityMeals:Number,acceptsVeg:Boolean,acceptsNonVeg:Boolean,availableFrom:String,availableTo:String,hasVehicle:Boolean,active:Boolean}));
