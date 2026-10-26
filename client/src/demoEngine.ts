@@ -1,3 +1,4 @@
+/** Permitted food storage regimes used to determine safe holding hours. */
 export type HoldingCondition =
   | 'hot-held'
   | 'refrigerated'
