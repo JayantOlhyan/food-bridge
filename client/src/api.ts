@@ -1,5 +1,6 @@
 import { handleDemoApi } from './demoEngine';
 
+/** Dispatches frontend requests directly to the client-side demo engine. */
 export async function api(path: string, body?: unknown): Promise<any> {
   // 100% client-side demo engine — no backend server, database, or API keys required.
   return handleDemoApi(path, body);
