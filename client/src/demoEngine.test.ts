@@ -136,4 +136,11 @@ describe('Standalone Client Demo Engine', () => {
     const afterCancel = finalBoot.ngos.find(n => n._id === chosen.ngoId)!.remainingCapacityMeals;
     expect(afterCancel).toBe(beforeCapacity);
   });
+
+  it('treats haversine distance as symmetric between two Delhi coordinates', () => {
+    const a = { lat: 28.6139, lng: 77.209 };
+    const b = { lat: 28.5355, lng: 77.391 };
+    expect(haversineKm(a, b)).toBeCloseTo(haversineKm(b, a), 8);
+    expect(haversineKm(a, b)).toBeGreaterThan(15);
+  });
 });
