@@ -12,6 +12,7 @@
 /* Enhanced component styles matching reference images */
 .role-selector-wrap { position: relative; display: flex; align-items: center; }
 .role-icon { position: absolute; left: 10px; color: #627260; pointer-events: none; z-index: 2; }
+/* Topbar persona switcher select input */
 .role-selector-wrap select { padding-left: 32px; }
 
 .notif-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
