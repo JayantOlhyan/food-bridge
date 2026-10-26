@@ -28,6 +28,7 @@ import {
 import { Brand, Badge, Stats, ListingsTable } from './components';
 import { api } from './api';
 
+/** Core platform capability highlights displayed in the landing overview grid. */
 const capabilities = [
   {
     icon: CalendarDays,
