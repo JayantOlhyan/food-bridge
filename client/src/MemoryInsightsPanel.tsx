@@ -16,6 +16,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+/** Individual historical delivery or incident fact recalled for an NGO. */
 export interface MemoryFact {
   id: string;
   text: string;
