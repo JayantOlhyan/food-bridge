@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { HindsightClient } from '@vectorize-io/hindsight-client';
 
+/** Optional Hindsight Cloud API key loaded from environment variables. */
 const API_KEY = process.env.HINDSIGHT_API_KEY || '';
 const BASE_URL = (process.env.HINDSIGHT_API_URL || process.env.HINDSIGHT_BASE_URL || 'https://api.hindsight.vectorize.io').replace(/\/+$/, '');
 const BANK_ID = process.env.HINDSIGHT_BANK_ID || 'foodbridge';
