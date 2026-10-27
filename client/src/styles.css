@@ -23,6 +23,7 @@
 .notif-icon.red { background: #fce9e6; color: #ad302b; }
 
 .stat-subtext { font-size: 10px; color: var(--muted); margin-top: 2px; }
+/* Moderate match score highlight tone */
 .amber-score { color: #b47c25 !important; }
 .red-icon { color: #ad302b; flex-shrink: 0; }
 .amber-icon { color: #b47c25; flex-shrink: 0; }
