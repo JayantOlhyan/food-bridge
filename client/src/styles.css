@@ -19,6 +19,7 @@
 /* Empty state placeholder inside the notification dropdown */
 .empty-notif { font-size: 12px; color: var(--muted); text-align: center; padding: 20px 0; }
 .notif-icon { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #eaf4e8; color: #2e7d32; flex-shrink: 0; }
+/* High-urgency alert icon tint for expiration warnings */
 .notif-icon.red { background: #fce9e6; color: #ad302b; }
 
 .stat-subtext { font-size: 10px; color: var(--muted); margin-top: 2px; }
