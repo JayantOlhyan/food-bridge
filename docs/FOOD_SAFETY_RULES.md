@@ -5,3 +5,7 @@ FoodBridge enforces deterministic time-temperature screening before any surplus 
 ## Disclaimer
 
 Configured holding thresholds are illustrative demo values (`server/config.js` and `client/src/demoEngine.ts`). Production deployments must align with FSSAI or local food safety regulations.
+
+## Holding Conditions Taxonomy
+
+Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `room-temperature`, or `packaged-sealed`.
