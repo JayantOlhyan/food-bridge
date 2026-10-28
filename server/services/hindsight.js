@@ -5,6 +5,7 @@ import { HindsightClient } from '@vectorize-io/hindsight-client';
 const API_KEY = process.env.HINDSIGHT_API_KEY || '';
 /** Default Hindsight REST API base endpoint URL. */
 const BASE_URL = (process.env.HINDSIGHT_API_URL || process.env.HINDSIGHT_BASE_URL || 'https://api.hindsight.vectorize.io').replace(/\/+$/, '');
+/** Default Hindsight memory bank identifier scoped to FoodBridge. */
 const BANK_ID = process.env.HINDSIGHT_BANK_ID || 'foodbridge';
 
 // Reusable official SDK client instance
