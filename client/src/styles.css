@@ -38,6 +38,7 @@
 .eligibility-banner.ineligible .eligibility-icon-circle { background: #fbd6cc; color: #ad302b; }
 
 .matches-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+/* Vertical stack of ranked NGO match cards */
 .matches-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
 .match-card-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
 .full-btn { background: #1f3d2b; color: white; width: 100%; justify-content: center; }
