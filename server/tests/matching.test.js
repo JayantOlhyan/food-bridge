@@ -271,4 +271,8 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     const dist = haversineKm(p1, p2);
     expect(dist).toBeCloseTo(2.0, 1);
   });
+
+  it('11. Haversine distance is zero for identical coordinates', () => {
+    expect(haversineKm(baseLocation, baseLocation)).toBe(0);
+  });
 });
