@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, CircleMarker, Popup, Polyline, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+/** Coordinate pair and address metadata rendered on the Leaflet map. */
 export type Location = { lat: number; lng: number; address: string };
 
 function Picker({ onPick }: { onPick: (location: Location) => void }) {
