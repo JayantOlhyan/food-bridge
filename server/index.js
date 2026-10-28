@@ -8,6 +8,7 @@ import {seed} from './scripts/seed-data.js';
 await connectDatabase();
 if(!await Organizer.exists({})&&process.env.DEMO_MODE==='true')await seed();
 
+/** Periodic sweep interval retiring overdue listings every 60 seconds. */
 const timer=setInterval(()=>expire().catch(console.error),60000);
 timer.unref();
 
