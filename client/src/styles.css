@@ -33,6 +33,7 @@
 .green-text { color: #2e7d32; }
 .amber-text { color: #9c620c; font-size: 11px; font-weight: 500; }
 
+/* Circular icon badge inside the food-safety eligibility banner */
 .eligibility-icon-circle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: #d7eecf; color: #216438; flex-shrink: 0; }
 .eligibility-banner.ineligible .eligibility-icon-circle { background: #fbd6cc; color: #ad302b; }
 
