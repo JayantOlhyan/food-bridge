@@ -5,6 +5,7 @@ export type HoldingCondition =
   | 'room-temperature'
   | 'packaged-sealed';
 
+/** Dietary classification tag applied to surplus food items. */
 export type DietType = 'veg' | 'non-veg';
 
 export type ListingStatus =
