@@ -41,6 +41,7 @@
 /* Vertical stack of ranked NGO match cards */
 .matches-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
 .match-card-actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+/* Full-width primary action button inside match cards */
 .full-btn { background: #1f3d2b; color: white; width: 100%; justify-content: center; }
 .back-btn { display: inline-flex; align-items: center; gap: 6px; }
 
