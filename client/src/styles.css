@@ -45,6 +45,7 @@
 .full-btn { background: #1f3d2b; color: white; width: 100%; justify-content: center; }
 .back-btn { display: inline-flex; align-items: center; gap: 6px; }
 
+/* Header strip above the embedded Leaflet dispatch map */
 .map-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .map-view-container { display: flex; flex-direction: column; gap: 10px; }
 .map-legend { display: flex; align-items: center; gap: 18px; padding: 10px 14px; background: #f7f9f5; border: 1px solid var(--line); border-radius: 8px; font-size: 11px; color: #526350; flex-wrap: wrap; margin-top: 8px; }
