@@ -26,6 +26,7 @@ import {
 
 ensureBank().catch(err => console.warn('[AI Bank Init]', err.message));
 process.env.DEMO_MODE ??= 'true';
+/** Configured Express application instance exported for server startup and tests. */
 export const app=express();
 app.disable('x-powered-by');
 app.use((_req,res,next)=>{
