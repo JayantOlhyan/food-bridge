@@ -5,3 +5,7 @@
 ## Storage Key & Schema Versioning
 
 State is stored under `STORAGE_KEY` in `window.localStorage` with an explicit `STORE_VERSION` tag so outdated browser snapshots reseed cleanly after upgrades.
+
+## Headless & Private-Mode Fallback
+
+When `localStorage` throws or is unavailable (such as in Node Vitest workers or restricted iframes), state seamlessly falls back to an in-memory `memoryStore`.
