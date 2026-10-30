@@ -1,3 +1,4 @@
+// Shared flat ESLint 9 configuration covering TypeScript client and ESM server files.
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import globals from 'globals';
