@@ -11,6 +11,7 @@ const BANK_ID = process.env.HINDSIGHT_BANK_ID || 'foodbridge';
 // Reusable official SDK client instance
 export let hindsightClient = null;
 
+/** Lazily initializes the Hindsight SDK client when an API key is configured. */
 export function initHindsightClient(customConfig = {}) {
   const apiKey = customConfig.apiKey ?? process.env.HINDSIGHT_API_KEY ?? API_KEY;
   const baseUrl = (customConfig.baseUrl ?? process.env.HINDSIGHT_API_URL ?? process.env.HINDSIGHT_BASE_URL ?? BASE_URL).replace(/\/+$/, '');
