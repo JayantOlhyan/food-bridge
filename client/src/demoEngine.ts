@@ -18,6 +18,7 @@ export type ListingStatus =
   | 'CANCELLED'
   | 'INELIGIBLE';
 
+/** Logistics states tracked for an assigned NGO pickup record. */
 export type PickupStatus = 'ACCEPTED' | 'COLLECTED' | 'DELIVERED' | 'EXPIRED' | 'CANCELLED';
 
 export interface GeoLocation {
