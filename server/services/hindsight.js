@@ -39,6 +39,7 @@ initHindsightClient();
 
 // Dynamic environment variable accessors
 const getApiKey = () => process.env.HINDSIGHT_API_KEY || API_KEY || '';
+/** Resolves the normalized Hindsight base URL without trailing slashes. */
 const getBaseUrl = () => (process.env.HINDSIGHT_API_URL || process.env.HINDSIGHT_BASE_URL || BASE_URL).replace(/\/+$/, '');
 const getBankId = () => process.env.HINDSIGHT_BANK_ID || BANK_ID || 'foodbridge';
 
