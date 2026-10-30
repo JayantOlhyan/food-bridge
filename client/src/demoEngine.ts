@@ -8,6 +8,7 @@ export type HoldingCondition =
 /** Dietary classification tag applied to surplus food items. */
 export type DietType = 'veg' | 'non-veg';
 
+/** Lifecycle states a surplus food listing transitions through. */
 export type ListingStatus =
   | 'POSTED'
   | 'ACCEPTED'
