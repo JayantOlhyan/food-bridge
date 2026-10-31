@@ -6,6 +6,7 @@ export async function api(path: string, body?: unknown): Promise<any> {
   return handleDemoApi(path, body);
 }
 
+/** Formats an ISO timestamp as a localized IST clock string. */
 export const time = (date: string) =>
   new Date(date).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
 
