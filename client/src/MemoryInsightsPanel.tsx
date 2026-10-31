@@ -24,6 +24,7 @@ export interface MemoryFact {
   score?: number;
 }
 
+/** Enriched NGO candidate combining deterministic score and memory adjustment. */
 export interface MatchCandidate {
   ngoId: string;
   ngo: {
