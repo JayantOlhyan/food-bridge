@@ -71,6 +71,7 @@
 /* Title and organizer subtitle for active pickup cards */
 .pickup-header-text { flex: 1; min-width: 0; }
 .pickup-boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 15px 0 5px; }
+/* Highlighted pickup logistics summary box */
 .pickup-info-box { display: flex; gap: 14px; align-items: flex-start; background: #f7f9f5; padding: 16px; border: 1px solid var(--line); border-radius: 9px; }
 .pickup-info-box.amber { background: #fffdf7; border-color: #faebd2; }
 .pickup-info-box p { font-size: 11px; color: var(--muted); margin: 0; }
