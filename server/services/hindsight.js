@@ -41,6 +41,7 @@ initHindsightClient();
 const getApiKey = () => process.env.HINDSIGHT_API_KEY || API_KEY || '';
 /** Resolves the normalized Hindsight base URL without trailing slashes. */
 const getBaseUrl = () => (process.env.HINDSIGHT_API_URL || process.env.HINDSIGHT_BASE_URL || BASE_URL).replace(/\/+$/, '');
+/** Returns the active Hindsight bank identifier with safe fallback. */
 const getBankId = () => process.env.HINDSIGHT_BANK_ID || BANK_ID || 'foodbridge';
 
 // Token conservation trackers and bounded in-memory cache
