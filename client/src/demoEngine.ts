@@ -21,6 +21,7 @@ export type ListingStatus =
 /** Logistics states tracked for an assigned NGO pickup record. */
 export type PickupStatus = 'ACCEPTED' | 'COLLECTED' | 'DELIVERED' | 'EXPIRED' | 'CANCELLED';
 
+/** Geographic coordinates and human-readable venue address. */
 export interface GeoLocation {
   lat: number;
   lng: number;
