@@ -80,6 +80,7 @@
 /* Volunteer dispatch instruction callout */
 .volunteer-note { font-size: 11px; color: #4b5d4c; font-weight: 500; }
 .eta-note { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); margin-top: 4px; }
+/* Bottom action bar for collect, deliver, and cancel controls */
 .pickup-footer-actions { margin-top: 15px; }
 .pickup-timeline-card { }
 .timeline-v2 { display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 20px; margin-top: 15px; border-left: 2px solid #e2ebd8; }
