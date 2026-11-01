@@ -1,4 +1,5 @@
 import {config as defaults} from '../config.js';
+/** Computes spherical Earth distance in kilometers between two coordinate pairs. */
 export function haversineKm(a,b) {
   const rad = n => n*Math.PI/180;
   const dlat=rad(b.lat-a.lat), dlng=rad(b.lng-a.lng);
