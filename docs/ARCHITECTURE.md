@@ -9,3 +9,7 @@ The monorepo is structured as an npm workspace containing a React 19 + Vite clie
 ## Frontend SPA Layer
 
 The React client renders the public impact simulator at `/` and the interactive organizer/NGO dispatch console at `/app` with Leaflet maps and Recharts analytics.
+
+## Standalone Demo Engine
+
+`client/src/demoEngine.ts` mirrors REST endpoints in-browser backed by versioned `localStorage`, allowing full interactive demos on static hosts such as Netlify with zero backend dependencies.
