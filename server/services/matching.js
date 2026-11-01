@@ -5,6 +5,7 @@ export function haversineKm(a,b) {
   const dlat=rad(b.lat-a.lat), dlng=rad(b.lng-a.lng);
   return 6371*2*Math.atan2(Math.sqrt(Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlng/2)**2),Math.sqrt(1-(Math.sin(dlat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dlng/2)**2)));
 }
+/** Validates holding limits, preparation clock, and collection lead time. */
 export function eligibility(listing,now=new Date(),cfg=defaults) {
   const reasons=[];
   const prepared=+new Date(listing.preparedAt), end=+new Date(listing.pickupWindowEnd), start=+new Date(listing.pickupWindowStart);
