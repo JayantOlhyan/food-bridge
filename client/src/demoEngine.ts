@@ -28,6 +28,7 @@ export interface GeoLocation {
   address: string;
 }
 
+/** Individual surplus food dish included in a listing manifest. */
 export interface FoodItem {
   name: string;
   dietType: DietType;
