@@ -13,3 +13,7 @@ The React client renders the public impact simulator at `/` and the interactive 
 ## Standalone Demo Engine
 
 `client/src/demoEngine.ts` mirrors REST endpoints in-browser backed by versioned `localStorage`, allowing full interactive demos on static hosts such as Netlify with zero backend dependencies.
+
+## Express REST API Layer
+
+`server/app.js` exposes validated REST endpoints using Zod schemas, security response headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`), and centralized JSON error handling.
