@@ -74,6 +74,7 @@
 /* Highlighted pickup logistics summary box */
 .pickup-info-box { display: flex; gap: 14px; align-items: flex-start; background: #f7f9f5; padding: 16px; border: 1px solid var(--line); border-radius: 9px; }
 .pickup-info-box.amber { background: #fffdf7; border-color: #faebd2; }
+/* Supporting caption copy inside pickup info boxes */
 .pickup-info-box p { font-size: 11px; color: var(--muted); margin: 0; }
 .pickup-info-box h3 { font-size: 14px; margin: 3px 0 6px; color: var(--ink); }
 .volunteer-note { font-size: 11px; color: #4b5d4c; font-weight: 500; }
