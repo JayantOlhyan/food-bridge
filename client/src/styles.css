@@ -83,6 +83,7 @@
 /* Bottom action bar for collect, deliver, and cancel controls */
 .pickup-footer-actions { margin-top: 15px; }
 .pickup-timeline-card { }
+/* Vertical milestone timeline tracking rescue handoff events */
 .timeline-v2 { display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 20px; margin-top: 15px; border-left: 2px solid #e2ebd8; }
 .timeline-node { position: relative; padding-left: 12px; }
 .node-dot { position: absolute; left: -27px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: #c5dac0; border: 2px solid #fff; }
