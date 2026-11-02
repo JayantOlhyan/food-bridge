@@ -3,6 +3,7 @@ import { Leaf, Clock, Utensils, Truck, Users, CheckCircle2, Cloud, ClipboardList
 import { Link } from 'react-router-dom';
 import { left, photo } from './api';
 
+/** Renders the FoodBridge wordmark and geometric mark in navigation bars. */
 export function Brand() {
   return (
     <Link to="/" className="brand">
