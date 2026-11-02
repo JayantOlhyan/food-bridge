@@ -89,6 +89,7 @@
 /* Timeline step marker node */
 .node-dot { position: absolute; left: -27px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: #c5dac0; border: 2px solid #fff; }
 .node-dot.active { background: #39824a; }
+/* Monospace timestamp column for pickup milestones */
 .node-time { font-size: 10px; color: #7f8e79; font-weight: 600; display: block; margin-bottom: 2px; }
 .node-content strong { font-size: 12px; color: var(--ink); display: block; }
 .node-content p { font-size: 11px; color: var(--muted); margin-top: 3px; }
