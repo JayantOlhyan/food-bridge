@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { api } from './api';
 
+/** Runtime health and token-conservation telemetry for the Hindsight copilot. */
 interface AiStatus {
   connected: boolean;
   bankId: string;
