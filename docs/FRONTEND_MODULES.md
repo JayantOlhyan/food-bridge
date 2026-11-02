@@ -5,3 +5,7 @@ The React 19 + TypeScript application under `client/src/` is organized around fo
 ## Entry Point & Routing (`main.tsx`, `App.tsx`)
 
 `main.tsx` mounts `BrowserRouter` and global styles, while `App.tsx` coordinates persona switching, navigation chrome, listings, pickups, notifications, and impact charts.
+
+## Client Adapter & Formatters (`api.ts`)
+
+`api.ts` centralizes request dispatch to `handleDemoApi`, IST time formatting, live deadline countdown labels, relative timestamps, and event thumbnail selection.
