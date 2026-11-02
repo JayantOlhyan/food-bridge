@@ -35,6 +35,7 @@ export interface FoodItem {
   category: string;
 }
 
+/** Outcome of safety window and lead-time validation for a listing. */
 export interface EligibilityResult {
   eligible: boolean;
   reasons: string[];
