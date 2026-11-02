@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+/** Standalone CLI entrypoint that connects, seeds demo records, and exits cleanly. */
 async function runSeed() {
   const port = process.env.PORT || 4000;
   if (process.env.MONGODB_URI) {
