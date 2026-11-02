@@ -92,6 +92,7 @@
 /* Monospace timestamp column for pickup milestones */
 .node-time { font-size: 10px; color: #7f8e79; font-weight: 600; display: block; margin-bottom: 2px; }
 .node-content strong { font-size: 12px; color: var(--ink); display: block; }
+/* Descriptive detail line under each timeline milestone */
 .node-content p { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
 .filter-select { padding: 6px 12px; font-size: 11px; border-radius: 6px; border: 1px solid #dbe0df; background: #fff; width: auto; cursor: pointer; }
