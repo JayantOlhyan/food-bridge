@@ -86,6 +86,7 @@
 /* Vertical milestone timeline tracking rescue handoff events */
 .timeline-v2 { display: flex; flex-direction: column; gap: 20px; position: relative; padding-left: 20px; margin-top: 15px; border-left: 2px solid #e2ebd8; }
 .timeline-node { position: relative; padding-left: 12px; }
+/* Timeline step marker node */
 .node-dot { position: absolute; left: -27px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: #c5dac0; border: 2px solid #fff; }
 .node-dot.active { background: #39824a; }
 .node-time { font-size: 10px; color: #7f8e79; font-weight: 600; display: block; margin-bottom: 2px; }
