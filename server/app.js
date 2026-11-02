@@ -41,6 +41,7 @@ app.use((_req,res,next)=>{
 });
 app.use(cors({origin:(process.env.CLIENT_ORIGIN||'http://localhost:5173').split(',')}));app.use(express.json({limit:'100kb'}));
 
+/** Reports database connectivity, uptime, and demo-mode readiness status. */
 const healthHandler=(_req,res)=>{
   const dbReady=mongoose.connection.readyState===1;
   res.status(dbReady?200:503).json({
