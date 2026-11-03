@@ -12,6 +12,7 @@ if(!await Organizer.exists({})&&process.env.DEMO_MODE==='true')await seed();
 const timer=setInterval(()=>expire().catch(console.error),60000);
 timer.unref();
 
+/** TCP port bound by the Express HTTP server. */
 const port=Number(process.env.PORT)||4000;
 const server=app.listen(port,()=>console.log(`FoodBridge API listening on http://localhost:${port}`));
 
