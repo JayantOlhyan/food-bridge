@@ -10,3 +10,8 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 ## Bootstrap Payload
 
 - `GET /api/bootstrap` returns seeded organizers, active NGOs, active matching configuration, `demoMode`, and `ephemeral` storage indicators.
+
+## Listing Creation & Queries
+
+- `GET /api/listings` lists surplus entries newest-first, optionally filtered by `organizerId`.
+- `POST /api/listings` validates `listingInput`, runs safety `eligibility()`, and persists status `POSTED` or `INELIGIBLE`.
