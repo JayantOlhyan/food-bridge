@@ -23,6 +23,7 @@ export function Badge({ children, tone = 'green' }: { children: React.ReactNode;
   );
 }
 
+/** Summarizes active surplus listings, meals rescued, and safety metrics. */
 export function Stats({ impact, listings = [] }: { impact: any; listings?: any[] }) {
   const activeCount = listings.filter(l => ['POSTED', 'ACCEPTED', 'COLLECTED'].includes(l.status)).length;
   const awaitingCount = listings.filter(l => l.status === 'ACCEPTED').length;
