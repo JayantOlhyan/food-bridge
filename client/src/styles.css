@@ -123,6 +123,7 @@
   z-index: 9999;
   transition: width 0.1s ease-out;
 }
+/* Subtle ambient radial backdrop behind the landing hero */
 .hero-bg-glow {
   position: absolute;
   inset: 0;
