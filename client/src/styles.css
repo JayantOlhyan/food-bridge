@@ -153,6 +153,7 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
+/* Live status beacon dot in the landing hero pill */
 .live-beacon {
   width: 8px;
   height: 8px;
