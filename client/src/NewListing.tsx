@@ -3,6 +3,7 @@ import { CalendarDays, MapPin, Send, Info } from 'lucide-react';
 import MapView from './MapView';
 import { api } from './api';
 
+/** Produces a local datetime-local input string offset by the given minutes. */
 const local = (minutes: number) => {
   const d = new Date(Date.now() + minutes * 60000);
   return new Date(+d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
