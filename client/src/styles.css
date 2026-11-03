@@ -99,6 +99,7 @@
 /* Inline label row pairing field titles with helper hints */
 .flex-label { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 .input-with-addon { position: relative; display: flex; align-items: center; }
+/* Numeric input paired with trailing unit suffix */
 .input-with-addon input { padding-right: 50px; }
 .input-with-addon .addon { position: absolute; right: 12px; font-size: 12px; color: var(--muted); pointer-events: none; }
 .action-cell { white-space: nowrap; text-align: right; }
