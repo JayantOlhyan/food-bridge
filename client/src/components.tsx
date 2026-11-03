@@ -13,6 +13,7 @@ export function Brand() {
   );
 }
 
+/** Displays a color-coded status pill for urgency, safety, and match tiers. */
 export function Badge({ children, tone = 'green' }: { children: React.ReactNode; tone?: string }) {
   return (
     <span className={`badge ${tone}`}>
