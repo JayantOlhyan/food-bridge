@@ -5,3 +5,7 @@ Automated verification runs through Vitest (`npm test`), TypeScript (`npm run ty
 ## Unified Verification Gate
 
 Run `npm run check` before pushing changes to execute all four quality gates sequentially from the repository root.
+
+## Matching Engine Unit Tests (`server/tests/matching.test.js`)
+
+Validates safety holding boundaries, 40-meal scenario ranking, diet exclusions, NGO shift windows, urgency buckets, and Haversine precision.
