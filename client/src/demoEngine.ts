@@ -42,6 +42,7 @@ export interface EligibilityResult {
   safeDeadline: string | null;
 }
 
+/** Food donor entity such as a caterer, banquet hall, or campus kitchen. */
 export interface Organizer {
   _id: string;
   name: string;
