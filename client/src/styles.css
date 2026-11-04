@@ -195,6 +195,7 @@
   background: linear-gradient(180deg, #fbfdf9 0%, #fff 100%);
   box-shadow: 0 10px 30px rgba(36, 61, 46, 0.05);
 }
+/* Header layout for the interactive rescue impact simulator */
 .simulator-header {
   display: flex;
   align-items: flex-start;
