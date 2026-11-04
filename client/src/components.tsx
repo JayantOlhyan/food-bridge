@@ -75,6 +75,7 @@ export function Stats({ impact, listings = [] }: { impact: any; listings?: any[]
   );
 }
 
+/** Presents verified meals delivered, weight saved, and CO2e avoided cards. */
 export function ImpactStats({ impact }: { impact: any }) {
   return (
     <div className="stats">
