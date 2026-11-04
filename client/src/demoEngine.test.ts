@@ -143,4 +143,10 @@ describe('Standalone Client Demo Engine', () => {
     expect(haversineKm(a, b)).toBeCloseTo(haversineKm(b, a), 8);
     expect(haversineKm(a, b)).toBeGreaterThan(15);
   });
+
+  it('classifies deadline exactly at 60 minutes as Medium urgency', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const boundary = new Date(now.getTime() + 60 * 60000).toISOString();
+    expect(urgency(boundary, now)).toBe('Medium');
+  });
 });
