@@ -66,6 +66,7 @@ export interface Ngo {
   active: boolean;
 }
 
+/** Surplus food listing persisted in the browser demo store. */
 export interface Listing {
   _id: string;
   organizerId: string;
