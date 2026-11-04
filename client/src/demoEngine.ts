@@ -51,6 +51,7 @@ export interface Organizer {
   location: GeoLocation;
 }
 
+/** Verified redistribution partner with capacity, diet, and schedule limits. */
 export interface Ngo {
   _id: string;
   name: string;
