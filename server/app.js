@@ -54,6 +54,7 @@ const healthHandler=(_req,res)=>{
 };
 app.get('/healthz',healthHandler);
 app.get('/api/health',healthHandler);
+/** Async route wrapper forwarding rejected promises to Express error middleware. */
 const route=fn=>(req,res,next)=>Promise.resolve(fn(req,res)).catch(next);
 const fail=(message,status=409)=>Object.assign(new Error(message),{status});
 const id=z.string().regex(/^[a-f0-9]{24}$/i,'Invalid identifier');
