@@ -9,3 +9,7 @@ Supplying `HINDSIGHT_API_KEY`, `HINDSIGHT_API_URL`, and `HINDSIGHT_BANK_ID` conn
 ## Zero-Config Local Fallback
 
 When `HINDSIGHT_API_KEY` is omitted, operational events are captured in a bounded in-process `localMemoryStore` (`MAX_LOCAL_MEMORIES = 500`) so tests and local demos stay functional offline.
+
+## Token Conservation Cache
+
+Recall and reflection queries are cached in `queryCache` with a 5-minute TTL (`CACHE_TTL_MS = 300000`) and 500-entry cap to avoid repeated remote calls.
