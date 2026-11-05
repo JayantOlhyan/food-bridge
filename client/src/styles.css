@@ -330,6 +330,7 @@
   border-bottom: 1px solid #e2e8f0;
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
+/* Copilot header title and icon alignment wrapper */
 .ai-title-wrap {
   display: flex;
   align-items: center;
