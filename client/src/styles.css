@@ -288,6 +288,7 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
+/* Active indicator dot on the AI Copilot launcher button */
 .ai-copilot-btn .ai-dot {
   width: 7px;
   height: 7px;
