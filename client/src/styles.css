@@ -309,6 +309,7 @@
   padding: 16px;
   animation: fadeIn 0.2s ease-out;
 }
+/* Modal drawer shell housing the AI Copilot chat and memory tabs */
 .ai-modal-container {
   background: #ffffff;
   width: 100%;
