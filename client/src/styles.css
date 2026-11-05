@@ -347,6 +347,7 @@
   color: #ffffff;
   box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
 }
+/* Inline title and powered-by badge row in Copilot header */
 .ai-title-row {
   display: flex;
   align-items: center;
