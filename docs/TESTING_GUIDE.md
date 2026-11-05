@@ -9,3 +9,7 @@ Run `npm run check` before pushing changes to execute all four quality gates seq
 ## Matching Engine Unit Tests (`server/tests/matching.test.js`)
 
 Validates safety holding boundaries, 40-meal scenario ranking, diet exclusions, NGO shift windows, urgency buckets, and Haversine precision.
+
+## Edge-Case Validation Suite (`server/tests/edge-cases.test.js`)
+
+Exercises boundary conditions including overnight NGO shifts, exact deadline cutoffs, partial capacities, and malformed payloads.
