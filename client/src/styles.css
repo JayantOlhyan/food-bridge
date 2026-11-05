@@ -228,6 +228,7 @@
   transition: all 0.15s ease;
   cursor: pointer;
 }
+/* Hover feedback for simulator meal presets */
 .preset-btn:hover {
   background: #edf5eb;
   border-color: #9abf94;
