@@ -13,3 +13,7 @@ When `localStorage` throws or is unavailable (such as in Node Vitest workers or 
 ## Seeded Delhi-NCR Ecosystem
 
 `createSeedStore()` initializes sample caterers, seven NGOs across Delhi-NCR with distinct shift hours and dietary capabilities, active surplus listings, and historical deliveries.
+
+## Simulated API Dispatch
+
+`handleDemoApi(path, body)` parses REST-equivalent paths (`/bootstrap`, `/listings`, `/matches`, `/accept`, `/collect`, `/deliver`, `/cancel`, `/impact`, `/ai/*`, `/demo/reset`).
