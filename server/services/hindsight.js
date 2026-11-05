@@ -48,6 +48,7 @@ const getBankId = () => process.env.HINDSIGHT_BANK_ID || BANK_ID || 'foodbridge'
 const retainedHashes = new Set();
 /** In-process memory buffer enabling full offline operation without API keys. */
 const localMemoryStore = []; // Bounded local fallback store when HINDSIGHT_API_KEY is unset
+/** Upper cap on retained offline memories to bound process heap usage. */
 const MAX_LOCAL_MEMORIES = 500;
 const queryCache = new Map(); // key -> { timestamp, data }
 const MAX_CACHE_SIZE = 500; // Prevent unbounded memory growth
