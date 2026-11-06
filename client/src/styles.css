@@ -396,6 +396,7 @@
   color: #334155;
   white-space: nowrap;
 }
+/* Positive connection badge for healthy memory bank state */
 .ai-stat-pill.success {
   border-color: #86efac;
   color: #166534;
