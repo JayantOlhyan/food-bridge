@@ -9,3 +9,7 @@ The React 19 + TypeScript application under `client/src/` is organized around fo
 ## Client Adapter & Formatters (`api.ts`)
 
 `api.ts` centralizes request dispatch to `handleDemoApi`, IST time formatting, live deadline countdown labels, relative timestamps, and event thumbnail selection.
+
+## Shared UI Primitives (`components.tsx`)
+
+Provides reusable `Brand`, semantic `Badge`, operational `Stats`, verified `ImpactStats`, and tabular `ListingsTable` components.
