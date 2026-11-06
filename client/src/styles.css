@@ -374,6 +374,7 @@
   color: #64748b;
   margin: 2px 0 0;
 }
+/* Compact telemetry bar displaying memory bank and cache stats */
 .ai-status-strip {
   display: flex;
   align-items: center;
