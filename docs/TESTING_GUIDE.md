@@ -13,3 +13,7 @@ Validates safety holding boundaries, 40-meal scenario ranking, diet exclusions, 
 ## Edge-Case Validation Suite (`server/tests/edge-cases.test.js`)
 
 Exercises boundary conditions including overnight NGO shifts, exact deadline cutoffs, partial capacities, and malformed payloads.
+
+## API State-Machine Integration (`server/tests/api.test.js`)
+
+Uses Supertest against an ephemeral MongoDB replica set to verify listing creation, atomic acceptance, collection, delivery, cancellation, and capacity restoration.
