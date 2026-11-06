@@ -19,3 +19,7 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 ## Candidate NGO Matching
 
 - `GET /api/listings/:id/matches` computes deterministic feasibility, travel ETA, match tier (`Full match`, `Partial`, `Excluded`), and composite scores.
+
+## Memory-Enriched Recommendations
+
+- `GET /api/listings/:id/recommendations` augments deterministic candidates with Hindsight reliability context, score deltas, and baseline comparisons.
