@@ -92,6 +92,7 @@ export interface Listing {
   updatedAt: string;
 }
 
+/** Active or historical pickup assignment linking a listing and an NGO. */
 export interface Pickup {
   _id: string;
   listingId: string;
