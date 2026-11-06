@@ -13,3 +13,7 @@ Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `
 ## Hot-Held Food Threshold
 
 `hot-held` surplus carries a maximum holding ceiling of **4 hours** from `preparedAt`.
+
+## Refrigerated Food Threshold
+
+`refrigerated` surplus carries a maximum holding ceiling of **8 hours** from `preparedAt`.
