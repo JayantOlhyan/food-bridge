@@ -15,3 +15,7 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 
 - `GET /api/listings` lists surplus entries newest-first, optionally filtered by `organizerId`.
 - `POST /api/listings` validates `listingInput`, runs safety `eligibility()`, and persists status `POSTED` or `INELIGIBLE`.
+
+## Candidate NGO Matching
+
+- `GET /api/listings/:id/matches` computes deterministic feasibility, travel ETA, match tier (`Full match`, `Partial`, `Excluded`), and composite scores.
