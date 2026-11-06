@@ -149,4 +149,10 @@ describe('Standalone Client Demo Engine', () => {
     const boundary = new Date(now.getTime() + 60 * 60000).toISOString();
     expect(urgency(boundary, now)).toBe('Medium');
   });
+
+  it('classifies deadline exactly at 180 minutes as Low urgency', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const boundary = new Date(now.getTime() + 180 * 60000).toISOString();
+    expect(urgency(boundary, now)).toBe('Low');
+  });
 });
