@@ -107,6 +107,7 @@ export interface Pickup {
   goodCondition?: boolean;
 }
 
+/** Pickup record hydrated with full listing and NGO snapshots for UI views. */
 export interface PopulatedPickup extends Omit<Pickup, 'listingId' | 'ngoId'> {
   listingId: Listing | null;
   ngoId: Ngo | null;
