@@ -440,6 +440,7 @@
   border-bottom-color: #059669;
   background: #f0fdf4;
 }
+/* Scrollable conversation viewport inside AI Copilot */
 .ai-chat-body {
   display: flex;
   flex-direction: column;
