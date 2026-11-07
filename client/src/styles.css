@@ -489,6 +489,7 @@
   background: #ecfdf5;
   color: #065f46;
 }
+/* Chronological message stack in the Copilot conversation */
 .ai-messages-list {
   flex: 1;
   overflow-y: auto;
