@@ -430,6 +430,7 @@
   cursor: pointer;
   transition: all 0.15s ease;
 }
+/* Hover treatment for inactive Copilot navigation tabs */
 .ai-tab-btn:hover {
   color: #0f172a;
   background: #f8fafc;
