@@ -408,6 +408,7 @@
   background: #fefce8;
   font-weight: 600;
 }
+/* Tab switcher toggling between Copilot chat and memory explorer */
 .ai-tab-bar {
   display: flex;
   border-bottom: 1px solid #e2e8f0;
