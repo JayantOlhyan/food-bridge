@@ -13,3 +13,7 @@ When `HINDSIGHT_API_KEY` is omitted, operational events are captured in a bounde
 ## Token Conservation Cache
 
 Recall and reflection queries are cached in `queryCache` with a 5-minute TTL (`CACHE_TTL_MS = 300000`) and 500-entry cap to avoid repeated remote calls.
+
+## Latency Guardrails
+
+All outbound HTTP calls pass through `fetchWithTimeout()` with an 8-second `AbortController` budget so slow upstream responses never block dispatch workflows.
