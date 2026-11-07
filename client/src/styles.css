@@ -469,6 +469,7 @@
   overflow-x: auto;
   padding-bottom: 4px;
 }
+/* One-click suggested question chip for dispatchers */
 .ai-chip {
   display: inline-flex;
   align-items: center;
