@@ -50,6 +50,7 @@ const retainedHashes = new Set();
 const localMemoryStore = []; // Bounded local fallback store when HINDSIGHT_API_KEY is unset
 /** Upper cap on retained offline memories to bound process heap usage. */
 const MAX_LOCAL_MEMORIES = 500;
+/** Short-lived response cache avoiding redundant remote recall round trips. */
 const queryCache = new Map(); // key -> { timestamp, data }
 const MAX_CACHE_SIZE = 500; // Prevent unbounded memory growth
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
