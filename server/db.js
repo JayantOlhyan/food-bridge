@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import {MongoMemoryReplSet} from 'mongodb-memory-server';
+/** Holds the ephemeral MongoMemoryReplSet instance during local development. */
 let memory;
 export async function connectDatabase(){
  let uri=process.env.MONGODB_URI;
