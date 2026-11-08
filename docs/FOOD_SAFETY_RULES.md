@@ -17,3 +17,7 @@ Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `
 ## Refrigerated Food Threshold
 
 `refrigerated` surplus carries a maximum holding ceiling of **8 hours** from `preparedAt`.
+
+## Ambient & Sealed Thresholds
+
+`room-temperature` dishes expire **2 hours** after preparation, while `packaged-sealed` items allow up to **6 hours**.
