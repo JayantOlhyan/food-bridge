@@ -509,6 +509,7 @@
 .ai-message-row.ai {
   justify-content: flex-start;
 }
+/* Base chat bubble geometry and padding */
 .ai-message-bubble {
   max-width: 85%;
   border-radius: 12px;
