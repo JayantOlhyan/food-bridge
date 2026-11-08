@@ -502,6 +502,7 @@
   display: flex;
   width: 100%;
 }
+/* Right-aligned layout for user-authored Copilot prompts */
 .ai-message-row.user {
   justify-content: flex-end;
 }
