@@ -522,6 +522,7 @@
   color: #ffffff;
   border-bottom-right-radius: 3px;
 }
+/* Assistant response bubble surface and border contrast */
 .ai-message-row.ai .ai-message-bubble {
   background: #f1f5f9;
   color: #0f172a;
