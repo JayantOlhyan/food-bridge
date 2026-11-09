@@ -13,3 +13,7 @@ Estimated arrival time uses an urban average speed of `20 km/h` plus an `8 minut
 ## Effective Arrival Timestamp
 
 Pickup arrival cannot precede the organizer's opening window: `arrival = max(now + etaMinutes, pickupWindowStart)`.
+
+## Asia/Kolkata Shift Availability
+
+`availableAt()` converts UTC timestamps to IST (`UTC+05:30`) and supports both daytime (`08:00-22:00`) and overnight (`20:00-04:00`) NGO shifts.
