@@ -113,6 +113,7 @@ export interface PopulatedPickup extends Omit<Pickup, 'listingId' | 'ngoId'> {
   ngoId: Ngo | null;
 }
 
+/** Simulated in-app notification shown in the organizer and NGO tray. */
 export interface DemoNotification {
   _id: string;
   recipientType: 'organizer' | 'ngo';
