@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 /** Coordinate pair and address metadata rendered on the Leaflet map. */
 export type Location = { lat: number; lng: number; address: string };
 
+/** Leaflet click listener allowing organizers to reposition a venue marker. */
 function Picker({ onPick }: { onPick: (location: Location) => void }) {
   useMapEvents({
     click: e => onPick({ lat: e.latlng.lat, lng: e.latlng.lng, address: 'Selected event location, New Delhi' })
