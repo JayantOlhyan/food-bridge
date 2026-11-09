@@ -17,3 +17,7 @@ Recall and reflection queries are cached in `queryCache` with a 5-minute TTL (`C
 ## Latency Guardrails
 
 All outbound HTTP calls pass through `fetchWithTimeout()` with an 8-second `AbortController` budget so slow upstream responses never block dispatch workflows.
+
+## Live Telemetry Counters
+
+`aiMetrics` tracks cache hits, cache misses, total recalls, reflects, retentions, and estimated tokens saved, surfaced via `GET /api/ai/status`.
