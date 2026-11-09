@@ -25,3 +25,7 @@ Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `
 ## Safe Deadline Calculation
 
 `safeDeadline = min(pickupWindowEnd, preparedAt + maxHoldHours[holdingCondition])`, ensuring collection never extends beyond either venue closing time or food safety limits.
+
+## Lead-Time Guardrail
+
+Listings require at least **30 minutes** (`minLeadMinutes`) remaining before `safeDeadline` so volunteers have viable dispatch margin.
