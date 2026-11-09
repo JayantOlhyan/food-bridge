@@ -576,6 +576,7 @@
   color: #475569;
   margin-bottom: 4px;
 }
+/* Compact list of recalled memory snippets */
 .ai-recalled-box ul {
   margin: 0;
   padding-left: 18px;
