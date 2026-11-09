@@ -58,6 +58,7 @@ app.get('/api/health',healthHandler);
 const route=fn=>(req,res,next)=>Promise.resolve(fn(req,res)).catch(next);
 /** Constructs an HTTP-status-annotated Error for domain validation failures. */
 const fail=(message,status=409)=>Object.assign(new Error(message),{status});
+/** Zod validator enforcing 24-character MongoDB ObjectId hexadecimal format. */
 const id=z.string().regex(/^[a-f0-9]{24}$/i,'Invalid identifier');
 const date=z.string().datetime({offset:true});
 const location=z.object({lat:z.number().min(-90).max(90),lng:z.number().min(-180).max(180),address:z.string().trim().min(1).max(300)});
