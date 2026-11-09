@@ -54,6 +54,7 @@ const MAX_LOCAL_MEMORIES = 500;
 const queryCache = new Map(); // key -> { timestamp, data }
 /** Maximum number of entries kept in the query cache before FIFO eviction. */
 const MAX_CACHE_SIZE = 500; // Prevent unbounded memory growth
+/** Time-to-live window in milliseconds for cached recall and reflect responses. */
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
 const FETCH_TIMEOUT_MS = 8000; // 8s timeout to protect request latencies
 
