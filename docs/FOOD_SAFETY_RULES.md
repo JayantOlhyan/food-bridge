@@ -21,3 +21,7 @@ Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `
 ## Ambient & Sealed Thresholds
 
 `room-temperature` dishes expire **2 hours** after preparation, while `packaged-sealed` items allow up to **6 hours**.
+
+## Safe Deadline Calculation
+
+`safeDeadline = min(pickupWindowEnd, preparedAt + maxHoldHours[holdingCondition])`, ensuring collection never extends beyond either venue closing time or food safety limits.
