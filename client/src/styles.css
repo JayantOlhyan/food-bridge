@@ -589,6 +589,7 @@
   color: #64748b;
   font-style: italic;
 }
+/* Bottom prompt composer bar inside the Copilot modal */
 .ai-input-form {
   display: flex;
   gap: 8px;
