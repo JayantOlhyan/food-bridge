@@ -13,3 +13,7 @@ The React 19 + TypeScript application under `client/src/` is organized around fo
 ## Shared UI Primitives (`components.tsx`)
 
 Provides reusable `Brand`, semantic `Badge`, operational `Stats`, verified `ImpactStats`, and tabular `ListingsTable` components.
+
+## Interactive Landing Experience (`Landing.tsx`)
+
+Presents the 40-meal worked matching scenario, an interactive surplus impact simulator, workflow steps, and direct entry to the live demo.
