@@ -149,6 +149,7 @@ export interface DemoConfig {
   co2Assumption: string;
 }
 
+/** Versioned root state snapshot serialized to browser localStorage. */
 interface DemoStore {
   version: number;
   seededAt: number;
