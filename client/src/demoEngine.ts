@@ -137,6 +137,7 @@ export interface MatchResult {
   margin: number;
 }
 
+/** Tunable safety windows, routing assumptions, and scoring weights. */
 export interface DemoConfig {
   maxHoldHours: Record<HoldingCondition, number>;
   minLeadMinutes: number;
