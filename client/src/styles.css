@@ -630,6 +630,7 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+/* Scrollable memory-bank explorer tab inside Copilot */
 .ai-memory-body {
   height: 480px;
   overflow-y: auto;
