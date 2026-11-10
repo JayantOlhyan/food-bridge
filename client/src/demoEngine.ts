@@ -124,6 +124,7 @@ export interface DemoNotification {
   createdAt: string;
 }
 
+/** Ranked NGO candidate output from the deterministic matching engine. */
 export interface MatchResult {
   ngoId: string;
   ngo: Ngo;
