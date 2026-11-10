@@ -645,6 +645,7 @@
   margin: 0;
   line-height: 1.5;
 }
+/* Search input row querying recalled operational memories */
 .ai-memory-search-bar {
   display: flex;
   align-items: center;
