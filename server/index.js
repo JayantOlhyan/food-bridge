@@ -14,6 +14,7 @@ timer.unref();
 
 /** TCP port bound by the Express HTTP server. */
 const port=Number(process.env.PORT)||4000;
+/** Active Node HTTP server instance serving the API and optional SPA bundle. */
 const server=app.listen(port,()=>console.log(`FoodBridge API listening on http://localhost:${port}`));
 
 let shuttingDown=false;
