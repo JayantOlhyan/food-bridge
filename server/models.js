@@ -4,6 +4,7 @@ const {Schema}=mongoose;
 const location={lat:{type:Number,required:true},lng:{type:Number,required:true},address:{type:String,required:true}};
 /** Mongoose model representing a surplus food donor or catering venue. */
 export const Organizer=mongoose.model('Organizer',new Schema({name:String,type:String,phone:String,location}));
+/** Mongoose model storing NGO capacity, diet capabilities, and shift hours. */
 export const Ngo=mongoose.model('Ngo',new Schema({name:String,location,dailyCapacityMeals:Number,remainingCapacityMeals:Number,acceptsVeg:Boolean,acceptsNonVeg:Boolean,availableFrom:String,availableTo:String,hasVehicle:Boolean,active:Boolean}));
 export const Listing=mongoose.model('Listing',new Schema({organizerId:{type:Schema.Types.ObjectId,ref:'Organizer'},eventName:String,eventType:String,location,foodItems:[{name:String,dietType:String,category:String}],quantityMeals:Number,quantityKg:Number,preparedAt:Date,holdingCondition:String,packagingAvailable:Boolean,pickupWindowStart:Date,pickupWindowEnd:Date,notes:String,safeDeadline:Date,status:{type:String,enum:['POSTED','ACCEPTED','COLLECTED','DELIVERED','EXPIRED','CANCELLED','INELIGIBLE']},eligibility:{eligible:Boolean,reasons:[String]}},{timestamps:true}));
 export const Pickup=mongoose.model('Pickup',new Schema({listingId:{type:Schema.Types.ObjectId,ref:'Listing',unique:true},ngoId:{type:Schema.Types.ObjectId,ref:'Ngo'},volunteerName:String,status:String,acceptedAt:Date,collectedAt:Date,deliveredAt:Date,deliveredMeals:Number,deliveredKg:Number}));
