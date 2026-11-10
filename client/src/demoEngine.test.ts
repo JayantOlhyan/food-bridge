@@ -155,4 +155,19 @@ describe('Standalone Client Demo Engine', () => {
     const boundary = new Date(now.getTime() + 180 * 60000).toISOString();
     expect(urgency(boundary, now)).toBe('Low');
   });
+
+  it('rejects listings with zero or negative meal quantities', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const res = eligibility(
+      {
+        preparedAt: new Date(now.getTime() - 15 * 60000).toISOString(),
+        holdingCondition: 'hot-held',
+        quantityMeals: 0,
+        pickupWindowStart: now.toISOString(),
+        pickupWindowEnd: new Date(now.getTime() + 120 * 60000).toISOString()
+      },
+      now
+    );
+    expect(res.eligible).toBe(false);
+  });
 });
