@@ -622,6 +622,7 @@
   justify-content: center;
   transition: background 0.15s ease;
 }
+/* Interactive hover elevation for enabled Copilot send button */
 .ai-send-btn:hover:not(:disabled) {
   background: #047857;
 }
