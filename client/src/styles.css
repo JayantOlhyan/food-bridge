@@ -662,6 +662,7 @@
   font-size: 13px;
   outline: none;
 }
+/* Responsive grid rendering recalled operational memory cards */
 .memory-cards-grid {
   display: grid;
   grid-template-columns: 1fr;
