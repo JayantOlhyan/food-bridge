@@ -67,6 +67,7 @@ function storeLocalMemory(entry) {
   localMemoryStore.push(entry);
 }
 
+/** Performs lightweight token-overlap recall against local operational memories. */
 function searchLocalMemories(query, limit = 5, tags = []) {
   const tokens = String(query || '')
     .toLowerCase()
