@@ -59,6 +59,7 @@ const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
 /** AbortController timeout bounding outbound Hindsight HTTP requests. */
 const FETCH_TIMEOUT_MS = 8000; // 8s timeout to protect request latencies
 
+/** Appends a normalized operational fact to the bounded local memory store. */
 function storeLocalMemory(entry) {
   if (localMemoryStore.length >= MAX_LOCAL_MEMORIES) {
     localMemoryStore.shift();
