@@ -17,3 +17,7 @@ Pickup arrival cannot precede the organizer's opening window: `arrival = max(now
 ## Asia/Kolkata Shift Availability
 
 `availableAt()` converts UTC timestamps to IST (`UTC+05:30`) and supports both daytime (`08:00-22:00`) and overnight (`20:00-04:00`) NGO shifts.
+
+## Hard Exclusion Gates
+
+Candidates are marked `Excluded` when the listing fails safety checks, the NGO is inactive, arrival falls outside shift hours, diet tags conflict (`veg`/`non-veg`), arrival exceeds `safeDeadline`, or remaining capacity is zero.
