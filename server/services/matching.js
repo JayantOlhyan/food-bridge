@@ -19,6 +19,7 @@ export function eligibility(listing,now=new Date(),cfg=defaults) {
   else if (deadline-+now<cfg.minLeadMinutes*60000) reasons.push(`At least ${cfg.minLeadMinutes} minutes of lead time is required.`);
   return {eligible:reasons.length===0,reasons:reasons.length?reasons:['Within the configured holding limit.','Sufficient collection lead time.'],safeDeadline:Number.isFinite(deadline)?new Date(deadline):null};
 }
+/** Converts a date value to minutes past midnight in India Standard Time (+05:30). */
 const delhiMinutes = date => {const d=new Date(+new Date(date)+330*60000);return d.getUTCHours()*60+d.getUTCMinutes();};
 const timeMinutes = value => {const [h,m]=value.split(':').map(Number);return h*60+m;};
 function availableAt(ngo,date) {const t=delhiMinutes(date),a=timeMinutes(ngo.availableFrom),b=timeMinutes(ngo.availableTo);return a<=b?t>=a&&t<=b:t>=a||t<=b;}
