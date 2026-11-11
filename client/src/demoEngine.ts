@@ -162,6 +162,7 @@ interface DemoStore {
   notifications: DemoNotification[];
 }
 
+/** LocalStorage key isolating FoodBridge standalone demo state. */
 const STORAGE_KEY = 'foodbridge_demo_store_v1';
 const STORE_VERSION = 1;
 
