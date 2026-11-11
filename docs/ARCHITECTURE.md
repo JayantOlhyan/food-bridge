@@ -17,3 +17,7 @@ The React client renders the public impact simulator at `/` and the interactive 
 ## Express REST API Layer
 
 `server/app.js` exposes validated REST endpoints using Zod schemas, security response headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`), and centralized JSON error handling.
+
+## MongoDB Persistence & Transactions
+
+Collections (`Organizer`, `Ngo`, `Listing`, `Pickup`, `Notification`) use Mongoose schemas, with multi-document transactions protecting capacity reservations, cancellations, and expiry sweeps.
