@@ -164,6 +164,7 @@ interface DemoStore {
 
 /** LocalStorage key isolating FoodBridge standalone demo state. */
 const STORAGE_KEY = 'foodbridge_demo_store_v1';
+/** Schema version bumped when seeded demo fixtures change shape. */
 const STORE_VERSION = 1;
 
 export const demoConfig: DemoConfig = {
