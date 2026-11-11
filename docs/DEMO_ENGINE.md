@@ -17,3 +17,7 @@ When `localStorage` throws or is unavailable (such as in Node Vitest workers or 
 ## Simulated API Dispatch
 
 `handleDemoApi(path, body)` parses REST-equivalent paths (`/bootstrap`, `/listings`, `/matches`, `/accept`, `/collect`, `/deliver`, `/cancel`, `/impact`, `/ai/*`, `/demo/reset`).
+
+## Parity with Server Rules
+
+The demo engine mirrors `server/services/matching.js` holding hours, minimum 30-minute lead time, Haversine math, IST window checks, and 40/35/25 scoring weights.
