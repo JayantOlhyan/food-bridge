@@ -167,6 +167,7 @@ const STORAGE_KEY = 'foodbridge_demo_store_v1';
 /** Schema version bumped when seeded demo fixtures change shape. */
 const STORE_VERSION = 1;
 
+/** Default Delhi-NCR demo thresholds and composite match weights. */
 export const demoConfig: DemoConfig = {
   // DEMO ONLY: not food-safety guidance. Real thresholds must follow FSSAI/local rules.
   maxHoldHours: {
