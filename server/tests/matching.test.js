@@ -292,4 +292,15 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     expect(res.eligible).toBe(true);
     expect(res.safeDeadline.getTime()).toBe(preparedAt.getTime() + 4 * 3600000);
   });
+
+  it('14. Eligibility rejects listings with less than 30 minutes of lead time', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const res = eligibility(validListing({
+      preparedAt: new Date(now.getTime() - 30 * 60000).toISOString(),
+      pickupWindowStart: now.toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 20 * 60000).toISOString()
+    }), now, config);
+    expect(res.eligible).toBe(false);
+    expect(res.reasons.some(r => r.includes('lead time'))).toBe(true);
+  });
 });
