@@ -196,6 +196,7 @@ export function haversineKm(a: { lat: number; lng: number }, b: { lat: number; l
   return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
 }
 
+/** Estimates driving distance and buffered ETA minutes for urban pickup. */
 export function estimateTravel(
   from: { lat: number; lng: number },
   to: { lat: number; lng: number },
