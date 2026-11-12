@@ -714,6 +714,7 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
+/* Footer disclaimer strip inside the Copilot modal */
 .ai-modal-footer {
   padding: 10px 20px;
   background: #f8fafc;
