@@ -23,3 +23,8 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 ## Memory-Enriched Recommendations
 
 - `GET /api/listings/:id/recommendations` augments deterministic candidates with Hindsight reliability context, score deltas, and baseline comparisons.
+
+## Pickup Claim Lifecycle
+
+- `POST /api/listings/:id/accept` atomically claims a listing for an eligible NGO, creates a `Pickup`, and decrements `remainingCapacityMeals`.
+- `POST /api/listings/:id/cancel` cancels the listing and restores reserved NGO capacity.
