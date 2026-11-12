@@ -21,6 +21,7 @@ export function eligibility(listing,now=new Date(),cfg=defaults) {
 }
 /** Converts a date value to minutes past midnight in India Standard Time (+05:30). */
 const delhiMinutes = date => {const d=new Date(+new Date(date)+330*60000);return d.getUTCHours()*60+d.getUTCMinutes();};
+/** Converts an HH:MM NGO shift boundary into minutes since midnight. */
 const timeMinutes = value => {const [h,m]=value.split(':').map(Number);return h*60+m;};
 function availableAt(ngo,date) {const t=delhiMinutes(date),a=timeMinutes(ngo.availableFrom),b=timeMinutes(ngo.availableTo);return a<=b?t>=a&&t<=b:t>=a||t<=b;}
 export function match(listing,ngos,now=new Date(),cfg=defaults) {
