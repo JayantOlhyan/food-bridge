@@ -21,3 +21,7 @@ Pickup arrival cannot precede the organizer's opening window: `arrival = max(now
 ## Hard Exclusion Gates
 
 Candidates are marked `Excluded` when the listing fails safety checks, the NGO is inactive, arrival falls outside shift hours, diet tags conflict (`veg`/`non-veg`), arrival exceeds `safeDeadline`, or remaining capacity is zero.
+
+## Full vs Partial Match Tiers
+
+Feasible NGOs with `remainingCapacityMeals >= quantityMeals` earn `Full match` (tier 0); NGOs with positive but smaller capacity are flagged `Partial` (tier 1) since split pickups are out of scope.
