@@ -280,4 +280,16 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     const far = { lat: 28.4595, lng: 77.0266 };
     expect(haversineKm(baseLocation, far)).toBeCloseTo(haversineKm(far, baseLocation), 8);
   });
+
+  it('13. Eligibility caps safeDeadline at holding limit when pickup window is longer', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const preparedAt = new Date(now.getTime() - 60 * 60000);
+    const res = eligibility(validListing({
+      holdingCondition: 'hot-held',
+      preparedAt: preparedAt.toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 10 * 3600000).toISOString()
+    }), now, config);
+    expect(res.eligible).toBe(true);
+    expect(res.safeDeadline.getTime()).toBe(preparedAt.getTime() + 4 * 3600000);
+  });
 });
