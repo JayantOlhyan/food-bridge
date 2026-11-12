@@ -185,6 +185,7 @@ export const demoConfig: DemoConfig = {
   co2Assumption: 'Illustrative demo assumption, not a measured emissions assessment.'
 };
 
+/** Computes great-circle distance in kilometers between two coordinates. */
 export function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
   const rad = (n: number) => (n * Math.PI) / 180;
   const dlat = rad(b.lat - a.lat);
