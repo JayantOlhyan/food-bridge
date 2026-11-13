@@ -207,6 +207,7 @@ export function estimateTravel(
   return { distanceKm, etaMinutes };
 }
 
+/** Evaluates food holding limits and minimum collection lead time. */
 export function eligibility(
   listing: {
     eventName?: string;
