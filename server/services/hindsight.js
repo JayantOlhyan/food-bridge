@@ -112,6 +112,7 @@ function getCached(key) {
   return item.data;
 }
 
+/** Stores a memory query payload in the bounded TTL cache. */
 function setCached(key, data) {
   if (queryCache.size >= MAX_CACHE_SIZE) {
     const oldestKey = queryCache.keys().next().value;
