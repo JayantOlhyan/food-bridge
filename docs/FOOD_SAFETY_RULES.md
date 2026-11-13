@@ -29,3 +29,7 @@ Listings must declare one of four holding regimes: `hot-held`, `refrigerated`, `
 ## Lead-Time Guardrail
 
 Listings require at least **30 minutes** (`minLeadMinutes`) remaining before `safeDeadline` so volunteers have viable dispatch margin.
+
+## Input Integrity Checks
+
+The evaluator rejects missing fields, non-positive meal quantities, future `preparedAt` timestamps, and inverted pickup windows (`pickupWindowStart >= pickupWindowEnd`).
