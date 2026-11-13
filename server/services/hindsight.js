@@ -101,6 +101,7 @@ function searchLocalMemories(query, limit = 5, tags = []) {
     .slice(0, limit);
 }
 
+/** Retrieves a non-expired cached memory response and tracks hit metrics. */
 function getCached(key) {
   const item = queryCache.get(key);
   if (!item) return null;
