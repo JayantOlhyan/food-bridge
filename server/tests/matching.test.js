@@ -303,4 +303,14 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     expect(res.eligible).toBe(false);
     expect(res.reasons.some(r => r.includes('lead time'))).toBe(true);
   });
+
+  it('15. Eligibility rejects inverted pickup windows where start >= end', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const res = eligibility(validListing({
+      pickupWindowStart: new Date(now.getTime() + 120 * 60000).toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 60 * 60000).toISOString()
+    }), now, config);
+    expect(res.eligible).toBe(false);
+    expect(res.reasons).toContain('Pickup window must end after it starts.');
+  });
 });
