@@ -265,6 +265,7 @@ export function eligibility(
   };
 }
 
+/** Converts a UTC timestamp into minutes since midnight in Asia/Kolkata (IST). */
 function delhiMinutes(date: number): number {
   const d = new Date(date + 330 * 60000);
   return d.getUTCHours() * 60 + d.getUTCMinutes();
