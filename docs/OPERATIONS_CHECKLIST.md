@@ -12,3 +12,8 @@ Use this checklist when preparing local builds, static demo deployments, or full
 - Confirm `MONGODB_URI` is configured in production (`NODE_ENV=production`).
 - Set `CLIENT_ORIGIN` to allowed comma-separated frontend origins.
 - Optionally configure `HINDSIGHT_API_KEY` and `HINDSIGHT_BANK_ID` for remote AI memory.
+
+## Container Stack Verification
+
+- Build and boot via `docker compose up -d --build`.
+- Confirm healthy readiness via `curl -fsS http://localhost:4000/healthz`.
