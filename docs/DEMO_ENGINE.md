@@ -21,3 +21,7 @@ When `localStorage` throws or is unavailable (such as in Node Vitest workers or 
 ## Parity with Server Rules
 
 The demo engine mirrors `server/services/matching.js` holding hours, minimum 30-minute lead time, Haversine math, IST window checks, and 40/35/25 scoring weights.
+
+## Automatic Deadline Sweeps
+
+Before read and mutation handlers run, `sweepExpired()` transitions past-deadline items to `EXPIRED` and credits back any locked NGO meal capacity.
