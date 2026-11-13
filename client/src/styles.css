@@ -727,6 +727,7 @@
   font-size: 11.5px;
   color: #64748b;
 }
+/* Continuous spinner rotation utility for async actions */
 .spin {
   animation: spin 1s linear infinite;
 }
