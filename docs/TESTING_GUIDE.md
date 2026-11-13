@@ -17,3 +17,7 @@ Exercises boundary conditions including overnight NGO shifts, exact deadline cut
 ## API State-Machine Integration (`server/tests/api.test.js`)
 
 Uses Supertest against an ephemeral MongoDB replica set to verify listing creation, atomic acceptance, collection, delivery, cancellation, and capacity restoration.
+
+## Health & Security Contracts (`server/tests/health.test.js`)
+
+Confirms `/healthz` and `/api/health` readiness payloads, defensive HTTP security headers, and structured JSON 404 responses for unknown API routes.
