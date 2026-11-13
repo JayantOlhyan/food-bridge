@@ -21,3 +21,7 @@ All outbound HTTP calls pass through `fetchWithTimeout()` with an 8-second `Abor
 ## Live Telemetry Counters
 
 `aiMetrics` tracks cache hits, cache misses, total recalls, reflects, retentions, and estimated tokens saved, surfaced via `GET /api/ai/status`.
+
+## Captured Lifecycle Signals
+
+Dedicated hooks (`recordListingAccepted`, `recordPickupDelivered`, `recordPickupDelayed`, `recordPickupCancelled`, `recordPickupFailed`) emit structured operational facts.
