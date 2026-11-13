@@ -17,3 +17,7 @@ Provides reusable `Brand`, semantic `Badge`, operational `Stats`, verified `Impa
 ## Interactive Landing Experience (`Landing.tsx`)
 
 Presents the 40-meal worked matching scenario, an interactive surplus impact simulator, workflow steps, and direct entry to the live demo.
+
+## Surplus Listing Form (`NewListing.tsx`)
+
+Captures venue metadata, food items with `veg`/`non-veg` tags, holding conditions, preparation time, and pickup window bounds with inline validation.
