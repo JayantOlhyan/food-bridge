@@ -170,4 +170,19 @@ describe('Standalone Client Demo Engine', () => {
     );
     expect(res.eligible).toBe(false);
   });
+
+  it('rejects listings when pickup window ends before it begins', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const res = eligibility(
+      {
+        preparedAt: new Date(now.getTime() - 10 * 60000).toISOString(),
+        holdingCondition: 'refrigerated',
+        quantityMeals: 20,
+        pickupWindowStart: new Date(now.getTime() + 90 * 60000).toISOString(),
+        pickupWindowEnd: new Date(now.getTime() + 30 * 60000).toISOString()
+      },
+      now
+    );
+    expect(res.eligible).toBe(false);
+  });
 });
