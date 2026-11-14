@@ -271,6 +271,7 @@ function delhiMinutes(date: number): number {
   return d.getUTCHours() * 60 + d.getUTCMinutes();
 }
 
+/** Parses an HH:MM clock string into total minutes from midnight. */
 function timeMinutes(value: string): number {
   const [h, m] = value.split(':').map(Number);
   return h * 60 + m;
