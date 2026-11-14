@@ -132,6 +132,7 @@ async function fetchWithTimeout(url, options = {}) {
   }
 }
 
+/** Runtime counters measuring cache hits, recalls, and estimated tokens saved. */
 export const aiMetrics = {
   retainsCount: 0,
   dedupedCount: 0,
