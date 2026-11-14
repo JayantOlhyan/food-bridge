@@ -25,3 +25,7 @@ All outbound HTTP calls pass through `fetchWithTimeout()` with an 8-second `Abor
 ## Captured Lifecycle Signals
 
 Dedicated hooks (`recordListingAccepted`, `recordPickupDelivered`, `recordPickupDelayed`, `recordPickupCancelled`, `recordPickupFailed`) emit structured operational facts.
+
+## Verified Preferences
+
+`recordVerifiedPreference()` retains explicit donor or NGO handling notes (such as preferred container types or loading gates) for future recommendations.
