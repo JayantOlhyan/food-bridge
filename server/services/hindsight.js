@@ -121,6 +121,7 @@ function setCached(key, data) {
   queryCache.set(key, { timestamp: Date.now(), data });
 }
 
+/** Executes fetch with an AbortController deadline to prevent stalled calls. */
 async function fetchWithTimeout(url, options = {}) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), options.timeout ?? FETCH_TIMEOUT_MS);
