@@ -21,3 +21,7 @@ Presents the 40-meal worked matching scenario, an interactive surplus impact sim
 ## Surplus Listing Form (`NewListing.tsx`)
 
 Captures venue metadata, food items with `veg`/`non-veg` tags, holding conditions, preparation time, and pickup window bounds with inline validation.
+
+## Interactive Dispatch Map (`MapView.tsx`)
+
+Renders Leaflet markers for event venues and candidate NGOs, route polylines, marker legends, and interactive coordinate picking.
