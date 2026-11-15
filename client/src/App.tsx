@@ -1249,6 +1249,7 @@ export default function App() {
   );
 }
 
+/** Modal dialog for NGOs to confirm delivered meal counts, weight, and food quality. */
 function DeliveryModal({
   pickup,
   busy,
