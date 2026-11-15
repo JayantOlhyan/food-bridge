@@ -776,6 +776,7 @@
   padding-bottom: 18px;
   border-bottom: 1px solid #eef2eb;
 }
+/* Header layout for the Memory Insights panel */
 .insights-title-group {
   display: flex;
   gap: 16px;
