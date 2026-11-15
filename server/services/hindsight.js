@@ -669,6 +669,7 @@ export function recordListingCreated(listing) {
   saveConfirmedRescueEvent('LISTING_CREATED', { listing }).catch(() => {});
 }
 
+/** Records an NGO claim event into operational memory for reliability tracking. */
 export function recordListingAccepted(listing, ngo) {
   saveConfirmedRescueEvent('LISTING_ACCEPTED', { listing, ngo }).catch(() => {});
 }
