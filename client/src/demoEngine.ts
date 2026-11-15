@@ -277,6 +277,7 @@ function timeMinutes(value: string): number {
   return h * 60 + m;
 }
 
+/** Checks whether an arrival timestamp falls inside an NGO's operating hours. */
 function availableAt(ngo: Ngo, dateMs: number): boolean {
   const t = delhiMinutes(dateMs);
   const a = timeMinutes(ngo.availableFrom);
