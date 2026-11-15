@@ -10,6 +10,7 @@ export async function api(path: string, body?: unknown): Promise<any> {
 export const time = (date: string) =>
   new Date(date).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
 
+/** Renders a concise countdown label until a listing's safe deadline. */
 export function left(date: string) {
   const minutes = Math.max(0, Math.floor((+new Date(date) - Date.now()) / 60000));
   if (!minutes) return 'Deadline passed';
