@@ -795,6 +795,7 @@
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(22, 101, 52, 0.2);
 }
+/* Inline status pills describing memory-enrichment mode */
 .insights-badge-row {
   display: flex;
   align-items: center;
