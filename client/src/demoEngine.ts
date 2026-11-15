@@ -285,6 +285,7 @@ function availableAt(ngo: Ngo, dateMs: number): boolean {
   return a <= b ? t >= a && t <= b : t >= a || t <= b;
 }
 
+/** Ranks candidate NGOs by feasibility, safety margin, distance, and capacity fit. */
 export function match(
   listing: Listing,
   ngos: Ngo[],
