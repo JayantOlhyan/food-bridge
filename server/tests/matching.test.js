@@ -318,4 +318,9 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     const now = new Date('2026-10-25T12:00:00.000Z');
     expect(urgency(new Date(now.getTime() - 10 * 60000), now, config)).toBe('High');
   });
+
+  it('17. Urgency boundary at exactly 60 minutes resolves to Medium', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    expect(urgency(new Date(now.getTime() + 60 * 60000), now, config)).toBe('Medium');
+  });
 });
