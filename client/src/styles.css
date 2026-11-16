@@ -837,6 +837,7 @@
   height: 7px;
   border-radius: 50%;
 }
+/* Green connectivity dot inside live status pills */
 .status-dot.green {
   background: #22c55e;
   box-shadow: 0 0 6px #22c55e;
