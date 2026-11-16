@@ -810,6 +810,7 @@
   color: #276749;
   text-transform: uppercase;
 }
+/* Primary pill showing live Hindsight memory status */
 .insights-status-pill {
   display: inline-flex;
   align-items: center;
