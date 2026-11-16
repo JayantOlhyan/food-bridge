@@ -57,6 +57,7 @@ const capabilities = [
   }
 ];
 
+/** Three-step surplus rescue workflow items illustrated on the landing page. */
 const steps = [
   ['List food', 'Organizer posts surplus meals.', ClipboardPlus],
   ['Check eligibility', 'Safety and timing rules applied.', ShieldCheck],
