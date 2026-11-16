@@ -313,4 +313,9 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     expect(res.eligible).toBe(false);
     expect(res.reasons).toContain('Pickup window must end after it starts.');
   });
+
+  it('16. Urgency classifies past deadlines as High urgency', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    expect(urgency(new Date(now.getTime() - 10 * 60000), now, config)).toBe('High');
+  });
 });
