@@ -361,6 +361,7 @@ export function match(
   );
 }
 
+/** Buckets remaining time before safe deadline into High, Medium, or Low urgency. */
 export function urgency(
   deadline: string | null,
   now: Date = new Date(),
