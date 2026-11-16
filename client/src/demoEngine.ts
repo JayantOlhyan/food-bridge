@@ -376,6 +376,7 @@ export function urgency(
       : 'Low';
 }
 
+/** Generates a deterministic 24-character hex identifier for demo records. */
 function makeId(prefix: string, seq: number): string {
   return `${prefix}${seq.toString(16).padStart(24 - prefix.length, '0')}`;
 }
