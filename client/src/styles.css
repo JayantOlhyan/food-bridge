@@ -845,6 +845,7 @@
 .status-dot.red {
   background: #ef4444;
 }
+/* Primary section heading inside the Memory Insights drawer */
 .insights-header-wrap h2 {
   font-size: 20px;
   color: #123425;
