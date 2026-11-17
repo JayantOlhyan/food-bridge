@@ -890,6 +890,7 @@
   transition: all 0.15s ease;
   white-space: nowrap;
 }
+/* Hover feedback on inactive comparison mode tabs */
 .demo-pill:hover {
   color: #1f3d2b;
   background: rgba(255, 255, 255, 0.6);
