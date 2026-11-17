@@ -29,3 +29,7 @@ Before read and mutation handlers run, `sweepExpired()` transitions past-deadlin
 ## Synthetic ObjectId Generation
 
 `makeId()` and `nextStoreId()` produce valid 24-character hex identifiers matching MongoDB ObjectId conventions so UI components remain backend-agnostic.
+
+## Defensive State Cloning
+
+API responses are cloned via `clone()` prior to returning to React components, preventing accidental client-side mutation of the persisted store.
