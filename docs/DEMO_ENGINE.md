@@ -25,3 +25,7 @@ The demo engine mirrors `server/services/matching.js` holding hours, minimum 30-
 ## Automatic Deadline Sweeps
 
 Before read and mutation handlers run, `sweepExpired()` transitions past-deadline items to `EXPIRED` and credits back any locked NGO meal capacity.
+
+## Synthetic ObjectId Generation
+
+`makeId()` and `nextStoreId()` produce valid 24-character hex identifiers matching MongoDB ObjectId conventions so UI components remain backend-agnostic.
