@@ -21,3 +21,7 @@ The React client renders the public impact simulator at `/` and the interactive 
 ## MongoDB Persistence & Transactions
 
 Collections (`Organizer`, `Ngo`, `Listing`, `Pickup`, `Notification`) use Mongoose schemas, with multi-document transactions protecting capacity reservations, cancellations, and expiry sweeps.
+
+## Ephemeral Local Replica Set
+
+When `MONGODB_URI` is unset outside production, `server/db.js` boots a single-node `MongoMemoryReplSet` so transaction semantics work identically in local dev and Vitest suites.
