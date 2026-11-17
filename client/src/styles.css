@@ -923,6 +923,7 @@
   color: #78350f;
   margin: 0;
 }
+/* Reassurance banner affirming safety rules cannot be overridden by AI */
 .safety-guarantee-strip {
   display: flex;
   flex-wrap: wrap;
