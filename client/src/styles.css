@@ -866,6 +866,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+/* Mode selector toggling enriched, baseline, and side-by-side views */
 .demo-mode-pills {
   display: flex;
   background: #f1f5f1;
