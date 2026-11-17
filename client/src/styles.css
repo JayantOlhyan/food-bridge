@@ -942,6 +942,7 @@
   font-weight: 500;
   color: #2e593a;
 }
+/* Centered loading state while memory candidates hydrate */
 .insights-loading {
   display: flex;
   align-items: center;
