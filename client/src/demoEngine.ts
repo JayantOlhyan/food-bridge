@@ -386,6 +386,7 @@ function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
 
+/** Builds a fresh Delhi-NCR demo dataset with organizers, NGOs, and listings. */
 function createSeedStore(): DemoStore {
   const now = Date.now();
   const at = (minutes: number) => new Date(now + minutes * 60000).toISOString();
