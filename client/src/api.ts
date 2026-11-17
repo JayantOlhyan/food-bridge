@@ -19,6 +19,7 @@ export function left(date: string) {
   return hours ? `${hours}h ${mins}m left` : `${mins}m left`;
 }
 
+/** Converts a past timestamp into a compact relative age label. */
 export function relativeTime(date: string | Date | number) {
   const diffSec = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 1000));
   if (diffSec < 60) return 'Just now';
