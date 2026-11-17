@@ -381,6 +381,7 @@ function makeId(prefix: string, seq: number): string {
   return `${prefix}${seq.toString(16).padStart(24 - prefix.length, '0')}`;
 }
 
+/** Deep-clones serializable state objects to prevent unintended mutation. */
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
