@@ -23,6 +23,7 @@ export function eligibility(listing,now=new Date(),cfg=defaults) {
 const delhiMinutes = date => {const d=new Date(+new Date(date)+330*60000);return d.getUTCHours()*60+d.getUTCMinutes();};
 /** Converts an HH:MM NGO shift boundary into minutes since midnight. */
 const timeMinutes = value => {const [h,m]=value.split(':').map(Number);return h*60+m;};
+/** Evaluates overnight and daytime NGO availability windows at arrival time. */
 function availableAt(ngo,date) {const t=delhiMinutes(date),a=timeMinutes(ngo.availableFrom),b=timeMinutes(ngo.availableTo);return a<=b?t>=a&&t<=b:t>=a||t<=b;}
 export function match(listing,ngos,now=new Date(),cfg=defaults) {
   const safety=eligibility(listing,now,cfg), deadline=+new Date(safety.safeDeadline);
