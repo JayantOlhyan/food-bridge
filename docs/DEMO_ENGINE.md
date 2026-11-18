@@ -33,3 +33,7 @@ Before read and mutation handlers run, `sweepExpired()` transitions past-deadlin
 ## Defensive State Cloning
 
 API responses are cloned via `clone()` prior to returning to React components, preventing accidental client-side mutation of the persisted store.
+
+## Instant Reset Mechanics
+
+Posting to `/demo/reset` discards mutations, rebuilds fresh relative timestamps anchored to `Date.now()`, and persists the clean baseline store.
