@@ -185,4 +185,19 @@ describe('Standalone Client Demo Engine', () => {
     );
     expect(res.eligible).toBe(false);
   });
+
+  it('accepts refrigerated surplus prepared six hours prior with sufficient window', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const res = eligibility(
+      {
+        preparedAt: new Date(now.getTime() - 6 * 3600000).toISOString(),
+        holdingCondition: 'refrigerated',
+        quantityMeals: 35,
+        pickupWindowStart: now.toISOString(),
+        pickupWindowEnd: new Date(now.getTime() + 3 * 3600000).toISOString()
+      },
+      now
+    );
+    expect(res.eligible).toBe(true);
+  });
 });
