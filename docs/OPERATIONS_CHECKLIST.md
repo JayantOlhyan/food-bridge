@@ -17,3 +17,8 @@ Use this checklist when preparing local builds, static demo deployments, or full
 
 - Build and boot via `docker compose up -d --build`.
 - Confirm healthy readiness via `curl -fsS http://localhost:4000/healthz`.
+
+## Static Demo Release (Netlify / Vercel)
+
+- Ensure `client/dist` builds cleanly with chunked vendor bundles (`react-vendor`, `charts-vendor`, `map-vendor`, `icons-vendor`).
+- Confirm SPA fallback rewrite routes `/app` to `/index.html`.
