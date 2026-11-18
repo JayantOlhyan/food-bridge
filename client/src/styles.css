@@ -990,6 +990,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+/* Header pairing top NGO name with final enriched score */
 .spotlight-header {
   display: flex;
   justify-content: space-between;
