@@ -25,3 +25,7 @@ Collections (`Organizer`, `Ngo`, `Listing`, `Pickup`, `Notification`) use Mongoo
 ## Ephemeral Local Replica Set
 
 When `MONGODB_URI` is unset outside production, `server/db.js` boots a single-node `MongoMemoryReplSet` so transaction semantics work identically in local dev and Vitest suites.
+
+## Hindsight Operational Memory
+
+`server/services/hindsight.js` integrates `@vectorize-io/hindsight-client` with a bounded local fallback store and 5-minute TTL cache to enrich feasible matches without overriding safety gates.
