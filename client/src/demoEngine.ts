@@ -595,6 +595,7 @@ function createSeedStore(): DemoStore {
   };
 }
 
+/** In-memory fallback backing store when Web Storage is unavailable. */
 let memoryStore: DemoStore | null = null;
 
 function saveStore(store: DemoStore): void {
