@@ -21,3 +21,7 @@ Uses Supertest against an ephemeral MongoDB replica set to verify listing creati
 ## Health & Security Contracts (`server/tests/health.test.js`)
 
 Confirms `/healthz` and `/api/health` readiness payloads, defensive HTTP security headers, and structured JSON 404 responses for unknown API routes.
+
+## AI Memory & Recommendation Suites
+
+`memory-service.test.js`, `ai.test.js`, and `recommendation.test.js` test offline memory retention, cache token savings, copilot answers, and baseline/enriched comparison integrity.
