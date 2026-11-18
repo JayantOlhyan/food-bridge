@@ -33,3 +33,7 @@ Listings require at least **30 minutes** (`minLeadMinutes`) remaining before `sa
 ## Input Integrity Checks
 
 The evaluator rejects missing fields, non-positive meal quantities, future `preparedAt` timestamps, and inverted pickup windows (`pickupWindowStart >= pickupWindowEnd`).
+
+## Automatic Expiration Sweeps
+
+Both `server/app.js` (`expire()`) and `client/src/demoEngine.ts` (`sweepExpired()`) automatically mark overdue `POSTED`/`ACCEPTED` listings `EXPIRED` and return reserved capacity to NGOs.
