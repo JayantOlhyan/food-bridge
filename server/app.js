@@ -66,6 +66,7 @@ const date=z.string().datetime({offset:true});
 const location=z.object({lat:z.number().min(-90).max(90),lng:z.number().min(-180).max(180),address:z.string().trim().min(1).max(300)});
 /** Request body schema validating new surplus listing submissions. */
 const listingInput=z.object({organizerId:id,eventName:z.string().trim().min(1).max(150),eventType:z.string().min(1).max(80),location,foodItems:z.array(z.object({name:z.string().trim().min(1).max(300),dietType:z.enum(['veg','non-veg']),category:z.string().max(80)})).min(1).max(30),quantityMeals:z.number().int().min(0).max(100000),quantityKg:z.number().positive().max(100000).optional(),preparedAt:date,holdingCondition:z.enum(['hot-held','refrigerated','room-temperature','packaged-sealed']),packagingAvailable:z.boolean(),pickupWindowStart:date,pickupWindowEnd:date,notes:z.string().max(2000).optional()});
+/** Transactionally expires past-deadline listings and refunds reserved NGO meals. */
 export async function expire(){
   const expiredPickups = [];
   await mongoose.connection.transaction(async session=>{
