@@ -29,3 +29,7 @@ When `MONGODB_URI` is unset outside production, `server/db.js` boots a single-no
 ## Hindsight Operational Memory
 
 `server/services/hindsight.js` integrates `@vectorize-io/hindsight-client` with a bounded local fallback store and 5-minute TTL cache to enrich feasible matches without overriding safety gates.
+
+## Health Checks & Graceful Shutdown
+
+`/healthz` and `/api/health` report live Mongoose readiness (`200` vs `503`), while `server/index.js` drains connections and clears background sweep intervals on `SIGINT`/`SIGTERM`.
