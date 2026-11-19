@@ -29,3 +29,7 @@ Feasible NGOs with `remainingCapacityMeals >= quantityMeals` earn `Full match` (
 ## Composite Scoring Weights
 
 Full matches are scored from `0–100` using weighted signals: **40% time margin**, **35% proximity**, and **25% capacity fit** (`quantityMeals / remainingCapacityMeals`).
+
+## Urgency Buckets
+
+Listings are prioritized as `High` urgency under 60 minutes remaining, `Medium` under 180 minutes, and `Low` at 180 minutes or more.
