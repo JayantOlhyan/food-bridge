@@ -25,3 +25,7 @@ Confirms `/healthz` and `/api/health` readiness payloads, defensive HTTP securit
 ## AI Memory & Recommendation Suites
 
 `memory-service.test.js`, `ai.test.js`, and `recommendation.test.js` test offline memory retention, cache token savings, copilot answers, and baseline/enriched comparison integrity.
+
+## Client Demo Engine Tests (`client/src/demoEngine.test.ts`)
+
+Verifies standalone browser API routing, safety rejection rules, full rescue lifecycle state transitions, capacity refunds, and reset idempotency.
