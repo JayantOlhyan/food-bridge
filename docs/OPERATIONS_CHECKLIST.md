@@ -22,3 +22,8 @@ Use this checklist when preparing local builds, static demo deployments, or full
 
 - Ensure `client/dist` builds cleanly with chunked vendor bundles (`react-vendor`, `charts-vendor`, `map-vendor`, `icons-vendor`).
 - Confirm SPA fallback rewrite routes `/app` to `/index.html`.
+
+## CI/CD Pipeline Gates
+
+- Verify `.github/workflows/ci.yml` passes `typecheck`, `lint`, `test`, and `build`.
+- Never bypass failing safety or transaction tests prior to tagging a release.
