@@ -29,3 +29,7 @@ Dedicated hooks (`recordListingAccepted`, `recordPickupDelivered`, `recordPickup
 ## Verified Preferences
 
 `recordVerifiedPreference()` retains explicit donor or NGO handling notes (such as preferred container types or loading gates) for future recommendations.
+
+## Bounded Score Adjustments
+
+Memory enrichment applies transparent score adjustments only to already-feasible candidates; excluded NGOs remain strictly excluded regardless of history.
