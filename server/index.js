@@ -19,6 +19,7 @@ const server=app.listen(port,()=>console.log(`FoodBridge API listening on http:/
 
 /** Re-entrancy guard preventing duplicate SIGTERM/SIGINT teardown sequences. */
 let shuttingDown=false;
+/** Drains open HTTP connections, clears timers, and disconnects MongoDB safely. */
 async function shutdown(signal){
   if(shuttingDown)return;
   shuttingDown=true;
