@@ -25,3 +25,7 @@ Candidates are marked `Excluded` when the listing fails safety checks, the NGO i
 ## Full vs Partial Match Tiers
 
 Feasible NGOs with `remainingCapacityMeals >= quantityMeals` earn `Full match` (tier 0); NGOs with positive but smaller capacity are flagged `Partial` (tier 1) since split pickups are out of scope.
+
+## Composite Scoring Weights
+
+Full matches are scored from `0–100` using weighted signals: **40% time margin**, **35% proximity**, and **25% capacity fit** (`quantityMeals / remainingCapacityMeals`).
