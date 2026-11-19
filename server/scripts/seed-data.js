@@ -1,5 +1,6 @@
 import {Organizer,Ngo,Listing,Pickup,Notification} from '../models.js';
 import {eligibility} from '../services/matching.js';
+/** Resets collections and populates deterministic Delhi-NCR demo fixtures. */
 export async function seed(){
  await Promise.all([Organizer.deleteMany({}),Ngo.deleteMany({}),Listing.deleteMany({}),Pickup.deleteMany({}),Notification.deleteMany({})]);
  const now=Date.now(),at=m=>new Date(now+m*60000), location={lat:28.592,lng:77.046,address:'Sample event venue, Dwarka, New Delhi'};
