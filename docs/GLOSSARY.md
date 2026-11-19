@@ -17,3 +17,7 @@ Shared terminology used across engineering code, API contracts, UI copy, and ope
 - **Full Match**: Feasible NGO whose remaining meal capacity meets or exceeds the entire listing quantity.
 - **Partial Match**: Feasible NGO with positive remaining capacity smaller than the listing quantity.
 - **Excluded**: NGO disqualified by safety failure, shift hours, diet mismatch, distance/ETA, or zero capacity.
+
+## Pickup Lifecycle States
+
+- `POSTED` -> `ACCEPTED` -> `COLLECTED` -> `DELIVERED`, with terminal exception states `EXPIRED`, `CANCELLED`, and `INELIGIBLE`.
