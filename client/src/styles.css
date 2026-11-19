@@ -1031,6 +1031,7 @@
   color: #166534;
   font-weight: 700;
 }
+/* Inline formula showing base deterministic score plus memory delta */
 .score-breakdown {
   font-size: 11px;
   color: #64748b;
