@@ -125,6 +125,7 @@ export function ImpactStats({ impact }: { impact: any }) {
   );
 }
 
+/** Tabular view of surplus food listings with status badges and quick actions. */
 export function ListingsTable({
   listings,
   onSelect,
