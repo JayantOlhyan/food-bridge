@@ -200,4 +200,19 @@ describe('Standalone Client Demo Engine', () => {
     );
     expect(res.eligible).toBe(true);
   });
+
+  it('accepts packaged-sealed surplus within its six-hour holding limit', () => {
+    const now = new Date('2026-11-10T10:00:00.000Z');
+    const res = eligibility(
+      {
+        preparedAt: new Date(now.getTime() - 4 * 3600000).toISOString(),
+        holdingCondition: 'packaged-sealed',
+        quantityMeals: 50,
+        pickupWindowStart: now.toISOString(),
+        pickupWindowEnd: new Date(now.getTime() + 2 * 3600000).toISOString()
+      },
+      now
+    );
+    expect(res.eligible).toBe(true);
+  });
 });
