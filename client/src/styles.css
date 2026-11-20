@@ -1042,6 +1042,7 @@
   padding-top: 14px;
   border-top: 1px solid #d1fae5;
 }
+/* Subheading preceding human-readable ranking rationale */
 .explanation-title {
   display: flex;
   align-items: center;
