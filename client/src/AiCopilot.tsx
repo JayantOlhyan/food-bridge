@@ -29,6 +29,7 @@ interface AiStatus {
   lastSync: string | null;
 }
 
+/** Chat message structure supporting recalled memory citations and cache flags. */
 interface Message {
   id: string;
   sender: 'user' | 'ai';
