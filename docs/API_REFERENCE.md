@@ -28,3 +28,8 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 
 - `POST /api/listings/:id/accept` atomically claims a listing for an eligible NGO, creates a `Pickup`, and decrements `remainingCapacityMeals`.
 - `POST /api/listings/:id/cancel` cancels the listing and restores reserved NGO capacity.
+
+## Collection & Delivery Handoff
+
+- `POST /api/pickups/:id/collect` records physical pickup by a volunteer.
+- `POST /api/pickups/:id/deliver` finalizes verified meals, weight in kilograms, and food condition confirmation.
