@@ -679,6 +679,7 @@ export function recordPickupDelivered(pickup, listing, ngo) {
   saveConfirmedRescueEvent('CONFIRMED_DELIVERY', { pickup, listing, ngo }).catch(() => {});
 }
 
+/** Captures late-collection incidents so future matches surface delay patterns. */
 export function recordPickupDelayed(pickup, listing, delayMinutes, reason) {
   saveConfirmedRescueEvent('PICKUP_DELAY', { pickup, listing, delayMinutes, reason }).catch(() => {});
 }
