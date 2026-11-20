@@ -1,3 +1,4 @@
+/** Centralized server thresholds for safety windows, routing speed, and scoring weights. */
 export const config = {
   // DEMO ONLY: not food-safety guidance. Real thresholds must follow FSSAI/local rules.
   maxHoldHours: {'hot-held': 4, refrigerated: 8, 'room-temperature': 2, 'packaged-sealed': 6},
