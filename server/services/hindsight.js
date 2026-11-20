@@ -674,6 +674,7 @@ export function recordListingAccepted(listing, ngo) {
   saveConfirmedRescueEvent('LISTING_ACCEPTED', { listing, ngo }).catch(() => {});
 }
 
+/** Logs verified meal delivery outcomes to reinforce dependable NGO routes. */
 export function recordPickupDelivered(pickup, listing, ngo) {
   saveConfirmedRescueEvent('CONFIRMED_DELIVERY', { pickup, listing, ngo }).catch(() => {});
 }
