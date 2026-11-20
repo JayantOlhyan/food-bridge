@@ -25,3 +25,7 @@ Captures venue metadata, food items with `veg`/`non-veg` tags, holding condition
 ## Interactive Dispatch Map (`MapView.tsx`)
 
 Renders Leaflet markers for event venues and candidate NGOs, route polylines, marker legends, and interactive coordinate picking.
+
+## Delivery Confirmation Modal (`App.tsx`)
+
+`DeliveryModal` collects verified delivered meals, rescued weight in kilograms, and a mandatory food-condition attestation before closing a rescue.
