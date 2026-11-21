@@ -1235,6 +1235,7 @@
   color: #475569;
   margin: 0 0 8px;
 }
+/* Vertical stack of recalled delivery and delay evidence rows */
 .facts-list {
   list-style: none;
   padding: 0;
