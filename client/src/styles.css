@@ -1132,6 +1132,7 @@
   overflow-x: auto;
   padding-bottom: 6px;
 }
+/* Interactive selector pill for inspecting individual NGO candidates */
 .candidate-pill-btn {
   background: #ffffff;
   border: 1.5px solid #d4e0d3;
