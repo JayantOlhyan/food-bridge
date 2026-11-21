@@ -33,3 +33,8 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 
 - `POST /api/pickups/:id/collect` records physical pickup by a volunteer.
 - `POST /api/pickups/:id/deliver` finalizes verified meals, weight in kilograms, and food condition confirmation.
+
+## Notifications & Verified Impact
+
+- `GET /api/notifications` returns workflow alerts scoped by recipient role.
+- `GET /api/impact` aggregates confirmed rescued meals, rescued kilograms, and illustrative CO2e avoided (`kg * 2.5`).
