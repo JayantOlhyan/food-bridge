@@ -33,3 +33,7 @@ Full matches are scored from `0–100` using weighted signals: **40% time margin
 ## Urgency Buckets
 
 Listings are prioritized as `High` urgency under 60 minutes remaining, `Medium` under 180 minutes, and `Low` at 180 minutes or more.
+
+## Deterministic Tie-Breaking
+
+Sorted output orders by tier ascending, score descending, distance ascending, and finally lexicographical `ngoId` to guarantee reproducible rankings.
