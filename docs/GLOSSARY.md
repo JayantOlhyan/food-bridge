@@ -21,3 +21,8 @@ Shared terminology used across engineering code, API contracts, UI copy, and ope
 ## Pickup Lifecycle States
 
 - `POSTED` -> `ACCEPTED` -> `COLLECTED` -> `DELIVERED`, with terminal exception states `EXPIRED`, `CANCELLED`, and `INELIGIBLE`.
+
+## AI Memory Concepts
+
+- **Operational Memory**: Structured facts recorded from deliveries, delays, cancellations, and preferences.
+- **Token Conservation**: Serving repeated dispatch queries from the 5-minute TTL cache to minimize LLM/API spend.
