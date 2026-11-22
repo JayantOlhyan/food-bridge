@@ -29,3 +29,7 @@ Renders Leaflet markers for event venues and candidate NGOs, route polylines, ma
 ## Delivery Confirmation Modal (`App.tsx`)
 
 `DeliveryModal` collects verified delivered meals, rescued weight in kilograms, and a mandatory food-condition attestation before closing a rescue.
+
+## AI Dispatch Copilot (`AiCopilot.tsx`)
+
+Provides a tabbed modal with suggested dispatch prompts, recalled operational citations, cache-hit badges, and an interactive memory search explorer.
