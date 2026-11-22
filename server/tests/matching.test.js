@@ -323,4 +323,29 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     const now = new Date('2026-10-25T12:00:00.000Z');
     expect(urgency(new Date(now.getTime() + 60 * 60000), now, config)).toBe('Medium');
   });
+
+  it('18. Excludes NGOs with zero remaining meal capacity', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const listing = validListing({
+      preparedAt: new Date(now.getTime() - 15 * 60000).toISOString(),
+      pickupWindowStart: now.toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 180 * 60000).toISOString()
+    });
+    const ngos = [{
+      _id: 'ngo-full-zero',
+      name: 'NGO Zero Cap',
+      location: baseLocation,
+      dailyCapacityMeals: 50,
+      remainingCapacityMeals: 0,
+      acceptsVeg: true,
+      acceptsNonVeg: true,
+      availableFrom: '00:00',
+      availableTo: '23:59',
+      hasVehicle: true,
+      active: true
+    }];
+    const [result] = match(listing, ngos, now, config);
+    expect(result.feasible).toBe(false);
+    expect(result.reasons).toContain('Excluded: no remaining capacity.');
+  });
 });
