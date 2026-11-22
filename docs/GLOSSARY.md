@@ -26,3 +26,8 @@ Shared terminology used across engineering code, API contracts, UI copy, and ope
 
 - **Operational Memory**: Structured facts recorded from deliveries, delays, cancellations, and preferences.
 - **Token Conservation**: Serving repeated dispatch queries from the 5-minute TTL cache to minimize LLM/API spend.
+
+## Impact Metrics
+
+- **Verified Meals / Kilograms**: Quantities explicitly attested by an NGO during delivery confirmation.
+- **Estimated CO2e Avoided**: Illustrative environmental metric computed as `deliveredKg * 2.5`.
