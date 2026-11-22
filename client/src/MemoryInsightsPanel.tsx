@@ -53,6 +53,7 @@ export interface MatchCandidate {
   };
 }
 
+/** Props accepted by the memory-enriched ranking breakdown panel. */
 interface MemoryInsightsPanelProps {
   listing: any;
   memoryMatches: MatchCandidate[];
