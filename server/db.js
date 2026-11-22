@@ -9,4 +9,5 @@ export async function connectDatabase(){
  if(!uri){if(process.env.NODE_ENV==='production') throw new Error('MONGODB_URI is required in production');memory=await MongoMemoryReplSet.create({replSet:{count:1}});uri=memory.getUri();console.log('Development: ephemeral MongoDB replica set; data resets on restart.');}
  await mongoose.connect(uri);
 }
+/** Gracefully closes Mongoose and stops any ephemeral in-memory MongoDB server. */
 export async function disconnectDatabase(){await mongoose.disconnect();await memory?.stop();}
