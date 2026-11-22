@@ -116,6 +116,7 @@ app.get('/api/ai/status',route(async(_req,res)=>res.json({connected:true,mode:pr
 app.post('/api/ai/ask',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(1000),context:z.string().max(2000).optional(),budget:z.enum(['low','mid','high']).default('low')});const data=schema.parse(req.body);res.json(await reflectAdvice(data.query,data.context,data.budget));}));
 app.post('/api/ai/recall',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(500),limit:z.number().int().min(1).max(20).default(5),tags:z.array(z.string()).optional()});const data=schema.parse(req.body);res.json({results:await recallMemories(data.query,data.limit,data.tags)});}));
 
+/** Single-flight mutex guarding concurrent demo database reset requests. */
 let resetting=false;
 app.post('/api/demo/reset',route(async(_req,res)=>{if(process.env.DEMO_MODE!=='true')throw fail('Demo reset is disabled',403);if(resetting)throw fail('Reset is already in progress');resetting=true;try{await seed();res.json({ok:true});}finally{resetting=false;}}));
 app.use('/api',(_req,res)=>res.status(404).json({error:'API route not found',details:null}));
