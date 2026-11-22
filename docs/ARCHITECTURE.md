@@ -33,3 +33,7 @@ When `MONGODB_URI` is unset outside production, `server/db.js` boots a single-no
 ## Health Checks & Graceful Shutdown
 
 `/healthz` and `/api/health` report live Mongoose readiness (`200` vs `503`), while `server/index.js` drains connections and clears background sweep intervals on `SIGINT`/`SIGTERM`.
+
+## Deployment Topologies
+
+FoodBridge supports static SPA hosting (Netlify/Vercel), single-container full-stack serving (`SERVE_STATIC=true` via Docker or Render), and split frontend/API cloud deployments.
