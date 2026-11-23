@@ -348,4 +348,30 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     expect(result.feasible).toBe(false);
     expect(result.reasons).toContain('Excluded: no remaining capacity.');
   });
+
+  it('19. Excludes veg-only NGOs when listing contains non-veg food items', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const listing = validListing({
+      foodItems: [{ name: 'Chicken Biryani', dietType: 'non-veg', category: 'Main' }],
+      preparedAt: new Date(now.getTime() - 15 * 60000).toISOString(),
+      pickupWindowStart: now.toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 180 * 60000).toISOString()
+    });
+    const ngos = [{
+      _id: 'ngo-veg-only',
+      name: 'Veg Only Shelter',
+      location: baseLocation,
+      dailyCapacityMeals: 100,
+      remainingCapacityMeals: 100,
+      acceptsVeg: true,
+      acceptsNonVeg: false,
+      availableFrom: '00:00',
+      availableTo: '23:59',
+      hasVehicle: true,
+      active: true
+    }];
+    const [result] = match(listing, ngos, now, config);
+    expect(result.feasible).toBe(false);
+    expect(result.reasons).toContain('Excluded: diet mismatch.');
+  });
 });
