@@ -27,3 +27,8 @@ Use this checklist when preparing local builds, static demo deployments, or full
 
 - Verify `.github/workflows/ci.yml` passes `typecheck`, `lint`, `test`, and `build`.
 - Never bypass failing safety or transaction tests prior to tagging a release.
+
+## Incident Triage & Demo Recovery
+
+- Inspect `/healthz` for database connectivity status.
+- In demo deployments, trigger `POST /api/demo/reset` or clear browser `localStorage` to restore clean Delhi-NCR fixtures.
