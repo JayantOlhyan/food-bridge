@@ -689,6 +689,7 @@ export function recordPickupCancelled(pickup, listing, ngo, reason) {
   saveConfirmedRescueEvent('CANCELLATION', { pickup, listing, ngo, reason }).catch(() => {});
 }
 
+/** Persists missed or expired collection failures into operational memory. */
 export function recordPickupFailed(pickup, listing, reason) {
   saveConfirmedRescueEvent('PICKUP_FAILED', { pickup, listing, reason }).catch(() => {});
 }
