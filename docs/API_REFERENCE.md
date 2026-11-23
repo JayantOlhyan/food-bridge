@@ -38,3 +38,9 @@ All API endpoints accept and return `application/json`. Requests are bounded to 
 
 - `GET /api/notifications` returns workflow alerts scoped by recipient role.
 - `GET /api/impact` aggregates confirmed rescued meals, rescued kilograms, and illustrative CO2e avoided (`kg * 2.5`).
+
+## AI Copilot & Demo Reset
+
+- `GET /api/ai/status` reports Hindsight connectivity and token-conservation counters.
+- `POST /api/ai/copilot` answers dispatcher questions with recalled operational facts.
+- `POST /api/demo/reset` reseeds the demo environment behind a single-flight lock.
