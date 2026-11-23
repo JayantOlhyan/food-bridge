@@ -642,6 +642,7 @@ function loadStore(): DemoStore {
   return fresh;
 }
 
+/** Marks past-deadline listings expired and restores reserved NGO capacity. */
 function sweepExpired(store: DemoStore): void {
   const nowMs = Date.now();
   let changed = false;
