@@ -121,6 +121,7 @@ let resetting=false;
 app.post('/api/demo/reset',route(async(_req,res)=>{if(process.env.DEMO_MODE!=='true')throw fail('Demo reset is disabled',403);if(resetting)throw fail('Reset is already in progress');resetting=true;try{await seed();res.json({ok:true});}finally{resetting=false;}}));
 app.use('/api',(_req,res)=>res.status(404).json({error:'API route not found',details:null}));
 
+/** ESM directory path used to locate the compiled Vite client bundle. */
 const __dirname=path.dirname(fileURLToPath(import.meta.url));
 const clientDistDir=path.resolve(__dirname,'../client/dist');
 if((process.env.SERVE_STATIC==='true'||process.env.NODE_ENV==='production')&&fs.existsSync(clientDistDir)){
