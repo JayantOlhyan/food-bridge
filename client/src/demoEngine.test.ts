@@ -215,4 +215,12 @@ describe('Standalone Client Demo Engine', () => {
     );
     expect(res.eligible).toBe(true);
   });
+
+  it('returns seeded notifications and impact summary immediately after reset', async () => {
+    const notifications = (await handleDemoApi('/notifications')) as unknown[];
+    const impact = (await handleDemoApi('/impact')) as { meals: number; deliveries: number };
+    expect(Array.isArray(notifications)).toBe(true);
+    expect(impact.deliveries).toBeGreaterThanOrEqual(2);
+    expect(impact.meals).toBeGreaterThan(0);
+  });
 });
