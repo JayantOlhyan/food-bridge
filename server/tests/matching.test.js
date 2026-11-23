@@ -374,4 +374,31 @@ describe('FoodBridge Safety Filter & Matching Engine', () => {
     expect(result.feasible).toBe(false);
     expect(result.reasons).toContain('Excluded: diet mismatch.');
   });
+
+  it('20. Breaks identical match scores deterministically by ngoId', () => {
+    const now = new Date('2026-10-25T12:00:00.000Z');
+    const listing = validListing({
+      quantityMeals: 20,
+      preparedAt: new Date(now.getTime() - 10 * 60000).toISOString(),
+      pickupWindowStart: now.toISOString(),
+      pickupWindowEnd: new Date(now.getTime() + 180 * 60000).toISOString()
+    });
+    const template = {
+      location: baseLocation,
+      dailyCapacityMeals: 60,
+      remainingCapacityMeals: 60,
+      acceptsVeg: true,
+      acceptsNonVeg: true,
+      availableFrom: '00:00',
+      availableTo: '23:59',
+      hasVehicle: true,
+      active: true
+    };
+    const results = match(listing, [
+      { ...template, _id: 'ngo-beta', name: 'Beta' },
+      { ...template, _id: 'ngo-alpha', name: 'Alpha' }
+    ], now, config);
+    expect(results[0].ngoId).toBe('ngo-alpha');
+    expect(results[1].ngoId).toBe('ngo-beta');
+  });
 });
