@@ -684,6 +684,7 @@ export function recordPickupDelayed(pickup, listing, delayMinutes, reason) {
   saveConfirmedRescueEvent('PICKUP_DELAY', { pickup, listing, delayMinutes, reason }).catch(() => {});
 }
 
+/** Stores pickup cancellation signals and reasons for dispatch diagnostics. */
 export function recordPickupCancelled(pickup, listing, ngo, reason) {
   saveConfirmedRescueEvent('CANCELLATION', { pickup, listing, ngo, reason }).catch(() => {});
 }
