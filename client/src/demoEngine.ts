@@ -610,6 +610,7 @@ function saveStore(store: DemoStore): void {
   }
 }
 
+/** Hydrates the versioned demo store or reseeds when absent or outdated. */
 function loadStore(): DemoStore {
   if (memoryStore) return memoryStore;
   try {
