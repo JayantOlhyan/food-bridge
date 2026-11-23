@@ -39,3 +39,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 - Never allow AI memory adjustments to override food-safety eligibility, NGO capacity, operating hours, dietary compatibility, or travel ETA hard filters.
 - Any state transition (`POSTED → ACCEPTED → COLLECTED → DELIVERED / CANCELLED / EXPIRED`) must remain atomic inside a MongoDB transaction.
+
+## Technical Reference Docs
+
+See the `docs/` directory for focused architecture, API, food-safety, matching, demo-engine, Hindsight memory, and operations references.
