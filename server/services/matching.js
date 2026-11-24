@@ -47,4 +47,5 @@ export function match(listing,ngos,now=new Date(),cfg=defaults) {
   const tier=r=>!r.feasible?2:r.matchType==='Full match'?0:1;
   return results.sort((a,b)=>tier(a)-tier(b)||b.score-a.score||a.distanceKm-b.distanceKm||a.ngoId.localeCompare(b.ngoId));
 }
+/** Maps minutes remaining until safeDeadline into High, Medium, or Low urgency. */
 export function urgency(deadline,now=new Date(),cfg=defaults) {const minutes=(+new Date(deadline)-+now)/60000;return minutes<cfg.urgencyMinutes.high?'High':minutes<cfg.urgencyMinutes.medium?'Medium':'Low';}
