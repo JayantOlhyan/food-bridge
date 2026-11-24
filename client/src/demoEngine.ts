@@ -681,6 +681,7 @@ function populatePickup(store: DemoStore, pickup: Pickup): PopulatedPickup {
   };
 }
 
+/** Allocates the next monotonic identifier from the store sequence counter. */
 function nextStoreId(store: DemoStore, prefix: string): string {
   store.seq += 1;
   return makeId(prefix, store.seq);
