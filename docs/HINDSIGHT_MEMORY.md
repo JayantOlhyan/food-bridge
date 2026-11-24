@@ -33,3 +33,7 @@ Dedicated hooks (`recordListingAccepted`, `recordPickupDelivered`, `recordPickup
 ## Bounded Score Adjustments
 
 Memory enrichment applies transparent score adjustments only to already-feasible candidates; excluded NGOs remain strictly excluded regardless of history.
+
+## Baseline Comparison Transparency
+
+Recommendation responses return both deterministic baseline scores and memory-adjusted rankings so coordinators can inspect every rank shift.
