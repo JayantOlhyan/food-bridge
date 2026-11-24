@@ -123,6 +123,7 @@ app.use('/api',(_req,res)=>res.status(404).json({error:'API route not found',det
 
 /** ESM directory path used to locate the compiled Vite client bundle. */
 const __dirname=path.dirname(fileURLToPath(import.meta.url));
+/** Filesystem path to static frontend build assets served in single-container mode. */
 const clientDistDir=path.resolve(__dirname,'../client/dist');
 if((process.env.SERVE_STATIC==='true'||process.env.NODE_ENV==='production')&&fs.existsSync(clientDistDir)){
   app.use(express.static(clientDistDir));
