@@ -223,4 +223,13 @@ describe('Standalone Client Demo Engine', () => {
     expect(impact.deliveries).toBeGreaterThanOrEqual(2);
     expect(impact.meals).toBeGreaterThan(0);
   });
+
+  it('reports live demo AI status and responds to copilot prompts offline', async () => {
+    const status = (await handleDemoApi('/ai/status')) as { connected: boolean; mode: string };
+    expect(status.connected).toBe(true);
+    const reply = (await handleDemoApi('/ai/copilot', { question: 'Which NGO is most reliable?' })) as {
+      answer: string;
+    };
+    expect(reply.answer.length).toBeGreaterThan(10);
+  });
 });
