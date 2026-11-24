@@ -1469,6 +1469,7 @@
   gap: 18px;
   margin-top: 20px;
 }
+/* Top banner summarizing rank shifts between baseline and enriched modes */
 .comparison-summary-banner {
   display: flex;
   justify-content: space-between;
