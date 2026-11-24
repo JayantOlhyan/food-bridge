@@ -672,6 +672,7 @@ function sweepExpired(store: DemoStore): void {
   if (changed) saveStore(store);
 }
 
+/** Joins a pickup with its referenced listing and NGO objects. */
 function populatePickup(store: DemoStore, pickup: Pickup): PopulatedPickup {
   return {
     ...pickup,
