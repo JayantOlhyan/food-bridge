@@ -694,6 +694,7 @@ export function recordPickupFailed(pickup, listing, reason) {
   saveConfirmedRescueEvent('PICKUP_FAILED', { pickup, listing, reason }).catch(() => {});
 }
 
+/** Retains verified dietary, timing, or venue preferences for future matching. */
 export function recordVerifiedPreference(entityType, entityId, preference, extra = {}) {
   const eventType = entityType === 'donor' ? 'DONOR_PREFERENCE' : 'NGO_PREFERENCE';
   saveConfirmedRescueEvent(eventType, {
