@@ -1520,6 +1520,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 18px;
 }
+/* Side-by-side ranking column comparing deterministic vs memory order */
 .compare-column {
   border: 1px solid #e2e8f0;
   border-radius: 12px;
