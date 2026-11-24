@@ -1398,6 +1398,7 @@
   gap: 18px;
   margin-top: 20px;
 }
+/* Callout banner shown when viewing deterministic baseline ranking */
 .baseline-notice-card {
   display: flex;
   gap: 14px;
