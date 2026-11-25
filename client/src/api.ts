@@ -31,6 +31,7 @@ export function relativeTime(date: string | Date | number) {
   return `${diffDays} d ago`;
 }
 
+/** Selects a curated event thumbnail URL based on the event title. */
 export const photo = (name = 'Wedding') => {
   const lower = name.toLowerCase();
   if (lower.includes('sangeet') || lower.includes('banquet')) {
