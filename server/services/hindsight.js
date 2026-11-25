@@ -40,10 +40,52 @@ const getBankId = () => process.env.HINDSIGHT_BANK_ID || BANK_ID || 'foodbridge'
 
 // Token conservation trackers and bounded in-memory cache
 const retainedHashes = new Set();
+const localMemoryStore = []; // Bounded local fallback store when HINDSIGHT_API_KEY is unset
+const MAX_LOCAL_MEMORIES = 500;
 const queryCache = new Map(); // key -> { timestamp, data }
 const MAX_CACHE_SIZE = 500; // Prevent unbounded memory growth
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
 const FETCH_TIMEOUT_MS = 8000; // 8s timeout to protect request latencies
+
+function storeLocalMemory(entry) {
+  if (localMemoryStore.length >= MAX_LOCAL_MEMORIES) {
+    localMemoryStore.shift();
+  }
+  localMemoryStore.push(entry);
+}
+
+function searchLocalMemories(query, limit = 5, tags = []) {
+  const tokens = String(query || '')
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(t => t.length > 2);
+
+  const scored = [];
+  for (const item of localMemoryStore) {
+    if (tags.length > 0 && !tags.some(t => item.tags.includes(t))) {
+      continue;
+    }
+    const lower = item.text.toLowerCase();
+    let hits = 0;
+    for (const token of tokens) {
+      if (lower.includes(token)) hits++;
+    }
+    if (hits > 0 || tags.length > 0) {
+      const score = tokens.length > 0 ? Math.min(1, 0.35 + (hits / tokens.length) * 0.65) : 0.7;
+      scored.push({
+        id: item.id,
+        text: item.text,
+        type: item.metadata?.eventType || 'local_memory',
+        entities: item.tags,
+        score: Number(score.toFixed(2))
+      });
+    }
+  }
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit);
+}
 
 function getCached(key) {
   const item = queryCache.get(key);
@@ -141,12 +183,13 @@ export async function ensureBank() {
  * Retain memory with aggressive token-conservation deduplication and concise payload formatting.
  */
 export async function retainMemory(content, tags = [], metadata = {}, documentId = null) {
-  const key = getApiKey();
-  if (!key || !content) return null;
+  if (!content || !String(content).trim()) return null;
 
+  const key = getApiKey();
   const currentBankId = getBankId();
   const currentBaseUrl = getBaseUrl();
-  const contentHash = hashContent(content.trim());
+  const trimmed = String(content).trim();
+  const contentHash = hashContent(trimmed);
   if (retainedHashes.has(contentHash)) {
     aiMetrics.dedupedCount++;
     aiMetrics.estimatedTokensSaved += 1800; // Approximate tokens saved by skipping LLM extraction
@@ -161,6 +204,22 @@ export async function retainMemory(content, tags = [], metadata = {}, documentId
         stringMetadata[k] = String(v);
       }
     }
+  }
+
+  // Offline / CI local memory bank fallback when HINDSIGHT_API_KEY is not configured
+  if (!key) {
+    const entry = {
+      id: documentId || `local-${contentHash.slice(0, 12)}`,
+      text: trimmed,
+      tags: sanitizedTags,
+      metadata: stringMetadata,
+      createdAt: new Date().toISOString()
+    };
+    storeLocalMemory(entry);
+    retainedHashes.add(contentHash);
+    aiMetrics.retainsCount++;
+    aiMetrics.lastSync = entry.createdAt;
+    return { status: 'retained', data: entry, mode: 'local' };
   }
 
   try {
@@ -220,9 +279,9 @@ export async function retainMemory(content, tags = [], metadata = {}, documentId
  * Recall memories via semantic / graph search (zero generative token spend).
  */
 export async function recallMemories(query, limit = 5, tags = []) {
-  const key = getApiKey();
-  if (!key || !query || !String(query).trim()) return [];
+  if (!query || !String(query).trim()) return [];
 
+  const key = getApiKey();
   const currentBankId = getBankId();
   const currentBaseUrl = getBaseUrl();
   const sanitizedTags = (Array.isArray(tags) ? tags : [tags]).filter(Boolean).map(String);
@@ -235,6 +294,12 @@ export async function recallMemories(query, limit = 5, tags = []) {
   }
 
   aiMetrics.recallCalls++;
+
+  if (!key) {
+    const localResults = searchLocalMemories(query, limit, sanitizedTags);
+    setCached(cacheKey, localResults);
+    return localResults;
+  }
   try {
     // 1. Prefer official TypeScript SDK client
     if (hindsightClient) {
@@ -295,15 +360,15 @@ export async function recallMemories(query, limit = 5, tags = []) {
  * Reflect / Reason with conservative "low" budget and strict caching.
  */
 export async function reflectAdvice(query, context = '', budget = 'low') {
-  const key = getApiKey();
-  if (!key || !query || !String(query).trim()) {
+  if (!query || !String(query).trim()) {
     return {
-      text: 'AI services are currently offline or unconfigured.',
+      text: 'Please provide a question for FoodBridge AI.',
       recalled: [],
-      source: 'offline'
+      source: 'invalid_query'
     };
   }
 
+  const key = getApiKey();
   const currentBankId = getBankId();
   const currentBaseUrl = getBaseUrl();
   const cacheKey = `reflect:${query}:${context}:${budget}`;
@@ -317,6 +382,24 @@ export async function reflectAdvice(query, context = '', budget = 'low') {
   // First recall relevant memories to enrich context and provide instant groundedness
   const recalled = await recallMemories(query, 3);
   aiMetrics.reflectCalls++;
+
+  if (!key) {
+    const localResult = recalled.length > 0
+      ? {
+          text: `Based on FoodBridge rescue records:\n${recalled.map(r => `• ${r.text}`).join('\n')}`,
+          recalled,
+          fromCache: false,
+          source: 'local_memory_bank'
+        }
+      : {
+          text: 'FoodBridge safety guidance: hot-held food has a 4-hour demo holding limit, refrigerated 8 hours, packaged-sealed 6 hours, and room-temperature 2 hours, with a 30-minute minimum collection lead time.',
+          recalled: [],
+          fromCache: false,
+          source: 'local_knowledge'
+        };
+    setCached(cacheKey, localResult);
+    return localResult;
+  }
 
   try {
     const fullQuery = context
@@ -613,7 +696,7 @@ export async function enrichMatchesWithMemory(listing, rawMatches, options = {})
   }
 
   const isHindsightConfigured = Boolean(process.env.HINDSIGHT_API_KEY || API_KEY);
-  const isMemoryEnabled = options.enabled !== false && isHindsightConfigured;
+  const isMemoryEnabled = options.enabled !== false;
 
   // Initialize all matches with baseline attributes and default memory insights
   const enriched = rawMatches.map((m, idx) => {
