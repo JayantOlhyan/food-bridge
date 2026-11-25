@@ -33,7 +33,7 @@ import { Brand, Badge, Stats, ImpactStats, ListingsTable } from './components';
 import MapView from './MapView';
 import NewListing from './NewListing';
 import AiCopilot from './AiCopilot';
-import MemoryInsightsPanel from './MemoryInsightsPanel';
+import PruneOptimizationPanel from './PruneOptimizationPanel';
 
 export default function App() {
   const navigate = useNavigate();
@@ -52,10 +52,10 @@ export default function App() {
   const [impact, setImpact] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [matches, setMatches] = useState<any[]>([]);
-  const [memoryMatches, setMemoryMatches] = useState<any[]>([]);
+  const [pruneMatches, setPruneMatches] = useState<any[]>([]);
   const [baselineMatches, setBaselineMatches] = useState<any[]>([]);
-  const [demoMode, setDemoMode] = useState<'memory' | 'baseline' | 'compare'>('memory');
-  const [hindsightAvailable, setHindsightAvailable] = useState(true);
+  const [demoMode, setDemoMode] = useState<'prune' | 'baseline' | 'compare'>('prune');
+  const [gatewayAvailable, setGatewayAvailable] = useState(true);
   const [matchesLoading, setMatchesLoading] = useState(false);
   const [selected, setSelected] = useState<any>(null);
   const [error, setError] = useState('');
@@ -126,18 +126,17 @@ export default function App() {
 
       setMatchesLoading(true);
       Promise.all([
-        api(`/listings/${params.id}/matches?memory=true`),
-        api(`/listings/${params.id}/matches?memory=false`),
+        api(`/listings/${params.id}/matches`),
         api('/ai/status').catch(() => ({ connected: false }))
       ])
-        .then(([memRes, baseRes, aiStat]) => {
+        .then(([optRes, aiStat]) => {
           if (!isMounted) return;
-          const mem = Array.isArray(memRes) ? memRes : [];
-          const base = Array.isArray(baseRes) ? baseRes : [];
-          setMemoryMatches(mem);
+          const opt = Array.isArray(optRes) ? optRes : [];
+          const base = opt.map(m => ({ ...m, score: m.baseScore || m.score }));
+          setPruneMatches(opt);
           setBaselineMatches(base);
-          setHindsightAvailable(Boolean(aiStat?.connected));
-          setMatches(demoMode === 'baseline' ? base : mem);
+          setGatewayAvailable(Boolean(aiStat?.connected));
+          setMatches(demoMode === 'baseline' ? base : opt);
         })
         .catch(e => {
           if (isMounted) setError(e.message);
@@ -156,9 +155,9 @@ export default function App() {
     if (demoMode === 'baseline') {
       setMatches(baselineMatches);
     } else {
-      setMatches(memoryMatches);
+      setMatches(pruneMatches);
     }
-  }, [demoMode, baselineMatches, memoryMatches]);
+  }, [demoMode, baselineMatches, pruneMatches]);
 
   async function action(path: string, body: unknown = {}) {
     setBusy(true);
@@ -313,7 +312,7 @@ export default function App() {
               className={`ai-copilot-btn ${showAi ? 'active' : ''}`}
               aria-label="Open AI Rescue Copilot"
               onClick={() => setShowAi(true)}
-              title="Open FoodBridge AI Copilot powered by Vectorize Hindsight"
+              title="Open FoodBridge AI Copilot powered by Prune AI Gateway"
             >
               <Sparkles size={16} />
               <span>AI Copilot</span>
@@ -454,13 +453,13 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Hindsight Memory Insights Panel & Mode Demonstration */}
+                  {/* Prune AI Gateway Optimization Panel & Mode Demonstration */}
                   {selected && (
-                    <MemoryInsightsPanel
+                    <PruneOptimizationPanel
                       listing={selected}
-                      memoryMatches={memoryMatches}
+                      pruneMatches={pruneMatches}
                       baselineMatches={baselineMatches}
-                      hindsightAvailable={hindsightAvailable}
+                      gatewayAvailable={gatewayAvailable}
                       activeMode={demoMode}
                       onModeChange={setDemoMode}
                       loading={matchesLoading}

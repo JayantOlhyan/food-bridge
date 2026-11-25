@@ -8,20 +8,13 @@ import {config} from './config.js';
 import {eligibility,match,urgency} from './services/matching.js';
 import {seed} from './scripts/seed-data.js';
 import {
-  ensureBank,
-  aiMetrics,
-  recallMemories,
-  reflectAdvice,
-  recordListingCreated,
-  recordListingAccepted,
-  recordPickupDelivered,
-  recordPickupDelayed,
-  recordPickupCancelled,
-  recordPickupFailed,
-  enrichMatchesWithMemory
-} from './services/hindsight.js';
+  pruneMetrics,
+  getPruneMetrics,
+  askPruneCopilot,
+  optimizeListingWithPrune,
+  enrichMatchesWithPrune
+} from './services/prune.js';
 
-ensureBank().catch(err => console.warn('[AI Bank Init]', err.message));
 process.env.DEMO_MODE ??= 'true';
 export const app=express();
 app.use(cors({origin:(process.env.CLIENT_ORIGIN||'http://localhost:5173').split(',')}));app.use(express.json({limit:'100kb'}));
@@ -31,54 +24,50 @@ const id=z.string().regex(/^[a-f0-9]{24}$/i,'Invalid identifier');
 const date=z.string().datetime({offset:true});
 const location=z.object({lat:z.number().min(-90).max(90),lng:z.number().min(-180).max(180),address:z.string().trim().min(1).max(300)});
 const listingInput=z.object({organizerId:id,eventName:z.string().trim().min(1).max(150),eventType:z.string().min(1).max(80),location,foodItems:z.array(z.object({name:z.string().trim().min(1).max(300),dietType:z.enum(['veg','non-veg']),category:z.string().max(80)})).min(1).max(30),quantityMeals:z.number().int().min(0).max(100000),quantityKg:z.number().positive().max(100000).optional(),preparedAt:date,holdingCondition:z.enum(['hot-held','refrigerated','room-temperature','packaged-sealed']),packagingAvailable:z.boolean(),pickupWindowStart:date,pickupWindowEnd:date,notes:z.string().max(2000).optional()});
+
 export async function expire(){
-  const expiredPickups = [];
   await mongoose.connection.transaction(async session=>{
     const expired=await Listing.find({status:{$in:['POSTED','ACCEPTED']},safeDeadline:{$lt:new Date()}}).session(session);
     for(const listing of expired){
       if(listing.status==='ACCEPTED'){
         const p=await Pickup.findOneAndUpdate({listingId:listing._id,status:'ACCEPTED'},{$set:{status:'EXPIRED'}},{session});
-        if(p){
-          await Ngo.updateOne({_id:p.ngoId},{$inc:{remainingCapacityMeals:listing.quantityMeals}},{session});
-          expiredPickups.push({listing, pickup: p});
-        }
+        if(p)await Ngo.updateOne({_id:p.ngoId},{$inc:{remainingCapacityMeals:listing.quantityMeals}},{session});
       }
       listing.status='EXPIRED';
       await listing.save({session});
     }
   });
-  for(const {listing, pickup} of expiredPickups){
-    Ngo.findById(pickup.ngoId).then(_n=>recordPickupFailed(pickup, listing, 'Safe collection deadline expired before pickup was completed')).catch(()=>{});
-  }
 }
+
 app.use('/api',(req,_res,next)=>{(req.method==='GET'||/accept|collect|cancel/.test(req.path)?expire():Promise.resolve()).then(()=>next(),next);});
 app.get('/api/bootstrap',route(async(_req,res)=>res.json({organizers:await Organizer.find(),ngos:await Ngo.find(),config,demoMode:process.env.DEMO_MODE==='true',ephemeral:!process.env.MONGODB_URI})));
 app.get('/api/listings',route(async(req,res)=>{const filter=req.query.organizerId?{organizerId:id.parse(req.query.organizerId)}:{};res.json(await Listing.find(filter).sort({createdAt:-1}));}));
-app.post('/api/listings',route(async(req,res)=>{const data=listingInput.parse(req.body);if(!await Organizer.exists({_id:data.organizerId}))throw fail('Organizer not found',404);const e=eligibility(data);const listing=await Listing.create({...data,safeDeadline:e.safeDeadline,eligibility:e,status:e.eligible?'POSTED':'INELIGIBLE'});if(e.eligible){const matches=match(listing.toObject(),await Ngo.find().lean());await Notification.insertMany(matches.filter(m=>m.feasible).map(m=>({recipientType:'ngo',recipientId:m.ngoId,listingId:listing._id,message:`New listing near you: ${listing.eventName}. Simulated alert.`})));recordListingCreated(listing);}res.status(201).json(listing);}));
+app.post('/api/listings',route(async(req,res)=>{const data=listingInput.parse(req.body);if(!await Organizer.exists({_id:data.organizerId}))throw fail('Organizer not found',404);const e=eligibility(data);const listing=await Listing.create({...data,safeDeadline:e.safeDeadline,eligibility:e,status:e.eligible?'POSTED':'INELIGIBLE'});if(e.eligible){const matches=match(listing.toObject(),await Ngo.find().lean());await Notification.insertMany(matches.filter(m=>m.feasible).map(m=>({recipientType:'ngo',recipientId:m.ngoId,listingId:listing._id,message:`New listing near you: ${listing.eventName}. Simulated alert.`})));}res.status(201).json(listing);}));
 app.get('/api/listings/:id',route(async(req,res)=>{const item=await Listing.findById(id.parse(req.params.id));if(!item)throw fail('Listing not found',404);res.json(item);}));
-app.get('/api/listings/:id/matches',route(async(req,res)=>{const item=await Listing.findById(id.parse(req.params.id)).lean();if(!item)throw fail('Listing not found',404);const rawMatches=match(item,await Ngo.find().lean());const enabled=req.query.memory!=='false';res.json(await enrichMatchesWithMemory(item,rawMatches,{enabled}));}));
+app.get('/api/listings/:id/matches',route(async(req,res)=>{const item=await Listing.findById(id.parse(req.params.id)).lean();if(!item)throw fail('Listing not found',404);const rawMatches=match(item,await Ngo.find().lean());res.json(await enrichMatchesWithPrune(item,rawMatches));}));
 app.get('/api/ngo/:ngoId/feed',route(async(req,res)=>{const ngo=await Ngo.findById(id.parse(req.params.ngoId)).lean();if(!ngo)throw fail('NGO not found',404);const listings=await Listing.find({status:'POSTED'}).lean();res.json(listings.map(l=>({...l,match:match(l,[ngo])[0],urgency:urgency(l.safeDeadline)})).filter(l=>l.match.feasible).sort((a,b)=>+a.safeDeadline-+b.safeDeadline));}));
-app.post('/api/listings/:id/accept',route(async(req,res)=>{const listingId=id.parse(req.params.id),{ngoId}=z.object({ngoId:id}).parse(req.body);let pickup, claimedListing, acceptingNgo;
+app.post('/api/listings/:id/accept',route(async(req,res)=>{const listingId=id.parse(req.params.id),{ngoId}=z.object({ngoId:id}).parse(req.body);let pickup;
  await mongoose.connection.transaction(async session=>{const listing=await Listing.findOne({_id:listingId,status:'POSTED'}).session(session).lean();if(!listing)throw fail('Already accepted by another NGO, or listing is no longer available');const ngo=await Ngo.findById(ngoId).session(session).lean();if(!ngo)throw fail('NGO not found',404);const result=match(listing,[ngo])[0];if(!result.feasible||result.matchType!=='Full match')throw fail(result.reasons.join(' '));
  const claimed=await Listing.findOneAndUpdate({_id:listingId,status:'POSTED',safeDeadline:{$gt:new Date()}},{$set:{status:'ACCEPTED'}},{new:true,session});if(!claimed)throw fail('Already accepted by another NGO');
  const reserved=await Ngo.findOneAndUpdate({_id:ngoId,remainingCapacityMeals:{$gte:listing.quantityMeals}},{$inc:{remainingCapacityMeals:-listing.quantityMeals}},{session});if(!reserved)throw fail('NGO capacity is no longer sufficient');
- [pickup]=await Pickup.create([{listingId,ngoId,status:'ACCEPTED',acceptedAt:new Date()}],{session});await Notification.create([{recipientType:'organizer',recipientId:listing.organizerId,listingId,message:`${ngo.name} accepted ${listing.eventName}. Simulated alert.`}],{session});claimedListing=claimed;acceptingNgo=ngo;});
- if(claimedListing&&acceptingNgo)recordListingAccepted(claimedListing,acceptingNgo);
+ [pickup]=await Pickup.create([{listingId,ngoId,status:'ACCEPTED',acceptedAt:new Date()}],{session});await Notification.create([{recipientType:'organizer',recipientId:listing.organizerId,listingId,message:`${ngo.name} accepted ${listing.eventName}. Simulated alert.`}],{session});});
  res.status(201).json(pickup);}));
 app.get('/api/pickups',route(async(req,res)=>{const filter=req.query.ngoId?{ngoId:id.parse(req.query.ngoId)}:{};const pickups=await Pickup.find(filter).populate('listingId').populate('ngoId').lean();res.json(req.query.organizerId?pickups.filter(p=>String(p.listingId?.organizerId)===id.parse(req.query.organizerId)):pickups);}));
-app.post('/api/pickups/:id/collect',route(async(req,res)=>{const pickupId=id.parse(req.params.id);let output, collectedListing;await mongoose.connection.transaction(async session=>{output=await Pickup.findOneAndUpdate({_id:pickupId,status:'ACCEPTED'},{$set:{status:'COLLECTED',collectedAt:new Date()}},{new:true,session});if(!output)throw fail('Only an accepted pickup can be collected');const listing=await Listing.findOneAndUpdate({_id:output.listingId,status:'ACCEPTED'},{$set:{status:'COLLECTED'}},{session});if(!listing)throw fail('Listing is no longer available for collection');collectedListing=listing;});
- if(output&&collectedListing&&typeof req.body?.delayMinutes==='number'&&req.body.delayMinutes>0){recordPickupDelayed(output,collectedListing,req.body.delayMinutes,req.body?.reason);}
+app.post('/api/pickups/:id/collect',route(async(req,res)=>{const pickupId=id.parse(req.params.id);let output;await mongoose.connection.transaction(async session=>{output=await Pickup.findOneAndUpdate({_id:pickupId,status:'ACCEPTED'},{$set:{status:'COLLECTED',collectedAt:new Date()}},{new:true,session});if(!output)throw fail('Only an accepted pickup can be collected');const listing=await Listing.findOneAndUpdate({_id:output.listingId,status:'ACCEPTED'},{$set:{status:'COLLECTED'}},{session});if(!listing)throw fail('Listing is no longer available for collection');});
  res.json(output);}));
-app.post('/api/pickups/:id/deliver',route(async(req,res)=>{const pickupId=id.parse(req.params.id);const data=z.object({deliveredMeals:z.number().int().min(0),deliveredKg:z.number().nonnegative().max(100000).optional(),goodCondition:z.literal(true)}).parse(req.body);let output, deliveredListing;await mongoose.connection.transaction(async session=>{const pickup=await Pickup.findById(pickupId).session(session);if(!pickup||pickup.status!=='COLLECTED')throw fail('Only a collected pickup can be delivered');const listing=await Listing.findById(pickup.listingId).session(session);if(data.deliveredMeals>listing.quantityMeals)throw fail('Delivered meals cannot exceed listed meals',400);output=await Pickup.findOneAndUpdate({_id:pickupId,status:'COLLECTED'},{$set:{...data,status:'DELIVERED',deliveredAt:new Date()}},{new:true,session});await Listing.updateOne({_id:listing._id,status:'COLLECTED'},{$set:{status:'DELIVERED'}},{session});deliveredListing=listing;});
- if(output&&deliveredListing){Ngo.findById(output.ngoId).then(n=>recordPickupDelivered(output,deliveredListing,n)).catch(()=>{});}
+app.post('/api/pickups/:id/deliver',route(async(req,res)=>{const pickupId=id.parse(req.params.id);const data=z.object({deliveredMeals:z.number().int().min(0),deliveredKg:z.number().nonnegative().max(100000).optional(),goodCondition:z.literal(true)}).parse(req.body);let output;await mongoose.connection.transaction(async session=>{const pickup=await Pickup.findById(pickupId).session(session);if(!pickup||pickup.status!=='COLLECTED')throw fail('Only a collected pickup can be delivered');const listing=await Listing.findById(pickup.listingId).session(session);if(data.deliveredMeals>listing.quantityMeals)throw fail('Delivered meals cannot exceed listed meals',400);output=await Pickup.findOneAndUpdate({_id:pickupId,status:'COLLECTED'},{$set:{...data,status:'DELIVERED',deliveredAt:new Date()}},{new:true,session});await Listing.updateOne({_id:listing._id,status:'COLLECTED'},{$set:{status:'DELIVERED'}},{session});});
  res.json(output);}));
-app.post('/api/listings/:id/cancel',route(async(req,res)=>{const listingId=id.parse(req.params.id);const cancelReason=typeof req.body?.reason==='string'?req.body.reason.slice(0,300):'Cancelled before collection';let cancelledListing, cancelledPickup;await mongoose.connection.transaction(async session=>{const listing=await Listing.findOneAndUpdate({_id:listingId,status:{$in:['POSTED','ACCEPTED']}},{$set:{status:'CANCELLED'}},{session});if(!listing)throw fail('Only posted or accepted listings can be cancelled');cancelledListing=listing;if(listing.status==='ACCEPTED'){const p=await Pickup.findOneAndUpdate({listingId,status:'ACCEPTED'},{$set:{status:'CANCELLED'}},{session});if(p){cancelledPickup=p;await Ngo.updateOne({_id:p.ngoId},{$inc:{remainingCapacityMeals:listing.quantityMeals}},{session});}}});if(cancelledPickup&&cancelledListing){Ngo.findById(cancelledPickup.ngoId).then(n=>recordPickupCancelled(cancelledPickup,cancelledListing,n,cancelReason)).catch(()=>{});}res.json({ok:true});}));
+app.post('/api/listings/:id/cancel',route(async(req,res)=>{const listingId=id.parse(req.params.id);await mongoose.connection.transaction(async session=>{const listing=await Listing.findOneAndUpdate({_id:listingId,status:{$in:['POSTED','ACCEPTED']}},{$set:{status:'CANCELLED'}},{session});if(!listing)throw fail('Only posted or accepted listings can be cancelled');if(listing.status==='ACCEPTED'){const p=await Pickup.findOneAndUpdate({listingId,status:'ACCEPTED'},{$set:{status:'CANCELLED'}},{session});if(p)await Ngo.updateOne({_id:p.ngoId},{$inc:{remainingCapacityMeals:listing.quantityMeals}},{session});}});res.json({ok:true});}));
 app.get('/api/notifications',route(async(req,res)=>res.json(await Notification.find({recipientId:id.parse(req.query.recipientId)}).sort({createdAt:-1}).limit(30))));
 app.post('/api/notifications/:id/read',route(async(req,res)=>{const n=await Notification.findByIdAndUpdate(id.parse(req.params.id),{read:true},{new:true});if(!n)throw fail('Notification not found',404);res.json(n);}));
 app.get('/api/impact',route(async(req,res)=>{let pickups=await Pickup.find({status:'DELIVERED',...(req.query.ngoId?{ngoId:id.parse(req.query.ngoId)}:{})}).populate('listingId').populate('ngoId').lean();if(req.query.organizerId)pickups=pickups.filter(p=>String(p.listingId.organizerId)===id.parse(req.query.organizerId));const meals=pickups.reduce((s,p)=>s+(p.deliveredMeals||0),0),kg=pickups.reduce((s,p)=>s+(p.deliveredKg||0),0);const days={};for(const p of pickups){const day=p.deliveredAt.toISOString().slice(0,10);days[day]=(days[day]||0)+p.deliveredMeals;}res.json({meals,kg,deliveries:pickups.length,co2:kg*config.co2Factor,factor:config.co2Factor,assumption:config.co2Assumption,history:Object.entries(days).sort().map(([date,meals])=>({date,meals})),recent:pickups.sort((a,b)=>b.deliveredAt-a.deliveredAt)});}));
-app.get('/api/ai/status',route(async(_req,res)=>res.json({connected:Boolean(process.env.HINDSIGHT_API_KEY),...aiMetrics})));
-app.post('/api/ai/ask',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(1000),context:z.string().max(2000).optional(),budget:z.enum(['low','mid','high']).default('low')});const data=schema.parse(req.body);res.json(await reflectAdvice(data.query,data.context,data.budget));}));
-app.post('/api/ai/recall',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(500),limit:z.number().int().min(1).max(20).default(5),tags:z.array(z.string()).optional()});const data=schema.parse(req.body);res.json({results:await recallMemories(data.query,data.limit,data.tags)});}));
+
+// Prune AI Gateway Endpoints
+app.get('/api/ai/status',route(async(_req,res)=>res.json(getPruneMetrics())));
+app.get('/api/prune/metrics',route(async(_req,res)=>res.json(getPruneMetrics())));
+app.post('/api/ai/ask',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(1000),context:z.string().max(2000).optional(),model:z.string().optional()});const data=schema.parse(req.body);res.json(await askPruneCopilot(data.query,data.context,data.model));}));
+app.post('/api/ai/optimize-listing',route(async(req,res)=>{const data=z.object({listing:z.record(z.any())}).parse(req.body);res.json(await optimizeListingWithPrune(data.listing));}));
+app.post('/api/ai/recall',route(async(req,res)=>{const schema=z.object({query:z.string().trim().min(1).max(500),limit:z.number().int().min(1).max(20).default(5)});const data=schema.parse(req.body);const answer=await askPruneCopilot(data.query);res.json({results:[{id:answer.receipt.receiptId,text:answer.answer,score:0.95}],receipt:answer.receipt});}));
 
 let resetting=false;
 app.post('/api/demo/reset',route(async(_req,res)=>{if(process.env.DEMO_MODE!=='true')throw fail('Demo reset is disabled',403);if(resetting)throw fail('Reset is already in progress');resetting=true;try{await seed();res.json({ok:true});}finally{resetting=false;}}));
