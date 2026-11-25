@@ -190,6 +190,9 @@ describe('Standalone Client Demo Engine', () => {
     const now = new Date('2026-11-10T10:00:00.000Z');
     const res = eligibility(
       {
+        eventName: 'Cold-Chain Banquet Reserve',
+        location: { lat: 28.6139, lng: 77.209, address: 'Connaught Place, New Delhi' },
+        foodItems: [{ name: 'Chilled Paneer Curry', dietType: 'veg', category: 'Main' }],
         preparedAt: new Date(now.getTime() - 6 * 3600000).toISOString(),
         holdingCondition: 'refrigerated',
         quantityMeals: 35,
@@ -205,6 +208,9 @@ describe('Standalone Client Demo Engine', () => {
     const now = new Date('2026-11-10T10:00:00.000Z');
     const res = eligibility(
       {
+        eventName: 'Sealed Festival Snack Boxes',
+        location: { lat: 28.592, lng: 77.046, address: 'Dwarka Sector 12, New Delhi' },
+        foodItems: [{ name: 'Sealed Veg Meal Box', dietType: 'veg', category: 'Packaged' }],
         preparedAt: new Date(now.getTime() - 4 * 3600000).toISOString(),
         holdingCondition: 'packaged-sealed',
         quantityMeals: 50,
@@ -224,13 +230,11 @@ describe('Standalone Client Demo Engine', () => {
     expect(impact.meals).toBeGreaterThan(0);
   });
 
-  it('reports live demo AI status and responds to copilot prompts offline', async () => {
-    const status = (await handleDemoApi('/ai/status')) as { connected: boolean; mode: string };
-    expect(status.connected).toBe(true);
-    const reply = (await handleDemoApi('/ai/copilot', { question: 'Which NGO is most reliable?' })) as {
-      answer: string;
-    };
-    expect(reply.answer.length).toBeGreaterThan(10);
+  it('serves NGO feed entries and rejects unrecognized demo API routes', async () => {
+    const boot = (await handleDemoApi('/bootstrap')) as { ngos: Ngo[] };
+    const feed = (await handleDemoApi(`/ngo/${boot.ngos[0]._id}/feed`)) as unknown[];
+    expect(Array.isArray(feed)).toBe(true);
+    await expect(handleDemoApi('/unknown/demo-route')).rejects.toThrow('Demo API route not found');
   });
 
   it('keeps demo reset idempotent across repeated invocations', async () => {
