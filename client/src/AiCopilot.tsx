@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Sparkles,
   Bot,
-  Database,
   Zap,
   X,
   Send,
@@ -11,56 +9,55 @@ import {
   Layers,
   ArrowRight,
   ShieldCheck,
-  Search
+  TrendingDown,
+  FileCheck,
+  Cpu
 } from 'lucide-react';
 import { api } from './api';
 
-/** Runtime health and token-conservation telemetry for the Hindsight copilot. */
-interface AiStatus {
-  connected: boolean;
-  bankId: string;
+interface PruneStatus {
+  gateway: string;
   baseUrl: string;
-  retainsCount: number;
-  dedupedCount: number;
+  connected: boolean;
+  totalRequests: number;
   cacheHits: number;
-  reflectCalls: number;
-  recallCalls: number;
-  estimatedTokensSaved: number;
-  lastSync: string | null;
+  tokensSaved: number;
+  promptTokensPruned: number;
+  totalCostSavedUsd: number;
+  averageLatencyReductionMs: number;
+  cacheHitRate: number;
+  recentReceipts: any[];
+  lastActive: string | null;
 }
 
-/** Chat message structure supporting recalled memory citations and cache flags. */
 interface Message {
   id: string;
   sender: 'user' | 'ai';
   text: string;
-  recalled?: any[];
+  receipt?: any;
   fromCache?: boolean;
+  tokensSaved?: number;
   timestamp: string;
 }
 
 export default function AiCopilot({ onClose }: { onClose: () => void }) {
-  const [activeTab, setActiveTab] = useState<'chat' | 'memory'>('chat');
-  const [status, setStatus] = useState<AiStatus | null>(null);
+  const [activeTab, setActiveTab] = useState<'chat' | 'analytics'>('chat');
+  const [status, setStatus] = useState<PruneStatus | null>(null);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       sender: 'ai',
-      text: 'Hello! I am FoodBridge AI Copilot powered by Vectorize Hindsight. I monitor food rescue operations, retain event and pickup memories, and provide dispatch guidance while actively conserving your API tokens with deduplication and response caching.',
+      text: 'Hello! I am FoodBridge AI Copilot powered by Prune AI Gateway (withprune.com). I optimize food rescue operations, provide rapid dispatch and temperature-safety guidance, and minimize API overhead via real-time context pruning and semantic caching.',
+      tokensSaved: 140,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
 
-  // Memory search state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-
   useEffect(() => {
     fetchStatus();
-    const interval = setInterval(fetchStatus, 6000);
+    const interval = setInterval(fetchStatus, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -89,13 +86,14 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
     setLoading(true);
 
     try {
-      const res = await api('/ai/ask', { query: q.trim(), budget: 'low' });
+      const res = await api('/ai/ask', { query: q.trim() });
       const aiMsg: Message = {
         id: String(Date.now() + 1),
         sender: 'ai',
-        text: res.text || 'No response returned.',
-        recalled: res.recalled,
+        text: res.answer || res.text || 'No response returned.',
+        receipt: res.receipt,
         fromCache: res.fromCache,
+        tokensSaved: res.tokensSaved,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages(prev => [...prev, aiMsg]);
@@ -106,26 +104,12 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
         {
           id: String(Date.now() + 1),
           sender: 'ai',
-          text: `Error connecting to AI service: ${err.message}`,
+          text: `Error connecting to Prune AI Gateway: ${err.message}`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }
       ]);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleMemorySearch() {
-    if (!searchQuery.trim() || searchLoading) return;
-    setSearchLoading(true);
-    try {
-      const res = await api('/ai/recall', { query: searchQuery.trim(), limit: 6 });
-      setSearchResults(res.results || []);
-      await fetchStatus();
-    } catch {
-      setSearchResults([]);
-    } finally {
-      setSearchLoading(false);
     }
   }
 
@@ -142,16 +126,18 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
         {/* Header */}
         <div className="ai-modal-header">
           <div className="ai-title-wrap">
-            <div className="ai-icon-badge">
-              <Sparkles size={20} className="ai-sparkle-icon" />
+            <div className="ai-icon-badge" style={{ background: '#f59e0b20', color: '#f59e0b' }}>
+              <Zap size={20} className="ai-sparkle-icon" />
             </div>
             <div>
               <div className="ai-title-row">
                 <h2>FoodBridge AI Copilot</h2>
-                <span className="ai-powered-tag">Vectorize Hindsight</span>
+                <span className="ai-powered-tag" style={{ background: '#f59e0b20', color: '#d97706', border: '1px solid #f59e0b40' }}>
+                  ⚡ Powered by Prune AI Gateway
+                </span>
               </div>
               <p className="ai-subtitle">
-                Long-Term Memory Bank & Token-Conserved Rescue Intelligence
+                Context Pruning, Semantic Caching & Real-Time Rescue Logistics
               </p>
             </div>
           </div>
@@ -160,26 +146,26 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Token Conservation & Memory Bank Status Strip */}
+        {/* Prune Gateway Telemetry Strip */}
         <div className="ai-status-strip">
           <div className="ai-stat-pill success">
             <CheckCircle2 size={14} />
-            <span>Bank: <strong>{status?.bankId || 'foodbridge'}</strong></span>
+            <span>Gateway: <strong>{status?.connected ? 'Live (withprune.com)' : 'Active (Demo Proxy)'}</strong></span>
           </div>
 
           <div className="ai-stat-pill token-saver">
             <Zap size={14} />
-            <span>Tokens Saved: <strong>~{status ? status.estimatedTokensSaved.toLocaleString() : '0'}</strong></span>
+            <span>Tokens Saved: <strong>~{status ? status.tokensSaved.toLocaleString() : '0'}</strong></span>
           </div>
 
           <div className="ai-stat-pill">
             <Layers size={14} />
-            <span>Cache Hits: <strong>{status?.cacheHits || 0}</strong></span>
+            <span>Cache Hits: <strong>{status?.cacheHits || 0}</strong> ({status?.cacheHitRate || 0}%)</span>
           </div>
 
           <div className="ai-stat-pill">
-            <Database size={14} />
-            <span>Retained: <strong>{status?.retainsCount || 0}</strong> ({status?.dedupedCount || 0} deduped)</span>
+            <TrendingDown size={14} />
+            <span>Cost Avoidance: <strong>${status ? status.totalCostSavedUsd.toFixed(4) : '0.0000'}</strong></span>
           </div>
         </div>
 
@@ -193,19 +179,11 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
             <span>Rescue Copilot</span>
           </button>
           <button
-            className={`ai-tab-btn ${activeTab === 'memory' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('memory');
-              if (!searchResults.length && !searchQuery) {
-                setSearchQuery('Food rescue listings Delhi');
-                api('/ai/recall', { query: 'Food rescue listings Delhi', limit: 5 })
-                  .then(r => setSearchResults(r.results || []))
-                  .catch(() => {});
-              }
-            }}
+            className={`ai-tab-btn ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
           >
-            <Database size={16} />
-            <span>Memory Bank Recall</span>
+            <Cpu size={16} />
+            <span>Prune Gateway Receipts ({status?.recentReceipts?.length || 0})</span>
           </button>
         </div>
 
@@ -237,28 +215,31 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
                   <div className="ai-message-bubble">
                     <div className="ai-msg-header">
                       <span className="ai-sender-name">
-                        {msg.sender === 'ai' ? 'FoodBridge Copilot' : 'You'}
+                        {msg.sender === 'ai' ? 'FoodBridge Copilot (Prune Proxy)' : 'You'}
                       </span>
                       {msg.fromCache && (
                         <span className="cache-pill">
-                          <Zap size={11} /> 0 Tokens (Cached)
+                          <Zap size={11} /> 0 Tokens (Prune Cache HIT)
                         </span>
                       )}
                       <span className="ai-msg-time">{msg.timestamp}</span>
                     </div>
 
-                    <div className="ai-msg-text">{msg.text}</div>
+                    <div className="ai-msg-text" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</div>
 
-                    {msg.recalled && msg.recalled.length > 0 && (
-                      <div className="ai-recalled-box">
-                        <span className="recalled-title">
-                          <Database size={12} /> Recalled Facts from Memory Bank:
-                        </span>
-                        <ul>
-                          {msg.recalled.slice(0, 3).map((r, i) => (
-                            <li key={i}>{r.text}</li>
-                          ))}
-                        </ul>
+                    {msg.receipt && (
+                      <div className="ai-recalled-box" style={{ background: '#f8fafc', borderColor: '#e2e8f0', marginTop: '0.75rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span className="recalled-title" style={{ color: '#0284c7', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <FileCheck size={12} /> Prune Signed Receipt: <code>{msg.receipt.receiptId}</code>
+                          </span>
+                          <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>
+                            +{msg.receipt.tokensSaved} tokens pruned
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>
+                          Model: <strong>{msg.receipt.model}</strong> · Optimization: {msg.receipt.optimization} · Latency: {msg.receipt.latencyMs}ms
+                        </div>
                       </div>
                     )}
                   </div>
@@ -268,7 +249,7 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
                 <div className="ai-message-row ai">
                   <div className="ai-message-bubble loading-bubble">
                     <Loader2 size={16} className="spin" />
-                    <span>Consulting Hindsight memory bank (budget: low)...</span>
+                    <span>Routing request via Prune AI Gateway (api.withprune.com)...</span>
                   </div>
                 </div>
               )}
@@ -296,61 +277,44 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {/* Tab 2: Memory Bank Recall */}
-        {activeTab === 'memory' && (
+        {/* Tab 2: Prune Gateway Analytics & Receipts */}
+        {activeTab === 'analytics' && (
           <div className="ai-memory-body">
             <p className="ai-memory-intro">
-              Semantic recall queries the Vectorize Hindsight knowledge graph without consuming LLM generative tokens. Search past events, NGO actions, or verified rescues.
+              Prune AI Gateway logs cryptographically verifiable optimization receipts for every request, measuring prompt token pruning, latency reduction, and cache performance.
             </p>
 
-            <form
-              className="ai-memory-search-bar"
-              onSubmit={e => {
-                e.preventDefault();
-                handleMemorySearch();
-              }}
-            >
-              <Search size={18} />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search memories (e.g. 'Dwarka wedding', 'NGO A capacity', 'hot-held meals')..."
-              />
-              <button type="submit" disabled={searchLoading} className="button small">
-                {searchLoading ? 'Recalling...' : 'Recall'}
-              </button>
-            </form>
-
             <div className="ai-memory-results">
-              {searchLoading ? (
-                <div className="ai-loading-box">
-                  <Loader2 size={24} className="spin" />
-                  <p>Searching memory bank...</p>
-                </div>
-              ) : searchResults.length > 0 ? (
+              {status?.recentReceipts && status.recentReceipts.length > 0 ? (
                 <div className="memory-cards-grid">
-                  {searchResults.map((item, idx) => (
-                    <div key={item.id || idx} className="memory-card">
+                  {status.recentReceipts.map((item, idx) => (
+                    <div key={item.receiptId || idx} className="memory-card" style={{ borderLeft: '4px solid #f59e0b' }}>
                       <div className="memory-card-top">
-                        <span className="memory-type-badge">{item.type || 'fact'}</span>
-                        <span className="memory-score">Score: {Number(item.score).toFixed(2)}</span>
+                        <span className="memory-type-badge" style={{ background: '#f59e0b20', color: '#d97706' }}>
+                          {item.cacheHit ? 'CACHE HIT' : 'PRUNED'}
+                        </span>
+                        <span className="memory-score" style={{ color: '#16a34a' }}>
+                          +{item.tokensSaved} tokens saved
+                        </span>
                       </div>
-                      <p className="memory-text">{item.text}</p>
-                      {item.entities && item.entities.length > 0 && (
-                        <div className="memory-entities">
-                          {item.entities.map((ent: string, ei: number) => (
-                            <span key={ei} className="entity-tag">#{ent}</span>
-                          ))}
-                        </div>
-                      )}
+                      <p className="memory-text" style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                        ID: {item.receiptId}
+                      </p>
+                      <p className="memory-text" style={{ fontSize: '0.85rem' }}>
+                        Query: "{item.query}"
+                      </p>
+                      <div className="memory-entities" style={{ marginTop: '0.5rem' }}>
+                        <span className="entity-tag">Model: {item.model}</span>
+                        <span className="entity-tag">Latency: {item.latencyMs}ms</span>
+                        <span className="entity-tag">Optimization: {item.optimization}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="empty-state-box">
-                  <Database size={32} />
-                  <p>No matching memories recalled for this search query.</p>
+                  <FileCheck size={32} />
+                  <p>Send a query to the AI Copilot to generate your first signed Prune optimization receipt!</p>
                 </div>
               )}
             </div>
@@ -362,7 +326,7 @@ export default function AiCopilot({ onClose }: { onClose: () => void }) {
           <div className="ai-footer-note">
             <ShieldCheck size={14} />
             <span>
-              All listings, NGO accepts, and deliveries automatically retain concise summaries in the Vectorize memory bank with hash-deduplication.
+              All prompt transactions are secured and optimized by the Prune AI Gateway with automatic context pruning and zero redundant token billing.
             </span>
           </div>
         </div>

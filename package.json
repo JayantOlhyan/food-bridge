@@ -21,12 +21,12 @@
     "start": "node server/index.js"
   },
   "dependencies": {
-    "@vectorize-io/hindsight-client": "^1.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongodb-memory-server": "^10.1.4",
     "mongoose": "^8.9.5",
+    "openai": "^7.64.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
