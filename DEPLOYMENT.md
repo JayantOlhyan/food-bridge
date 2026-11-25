@@ -1,5 +1,8 @@
 # FoodBridge Deployment Plan & Production Runbook
 
+- **Live Production Demo (Netlify):** https://food-bridge-01.netlify.app/
+- **Repository:** https://github.com/JayantOlhyan/food-bridge
+
 This document defines the end-to-end deployment architecture, environment configuration, CI/CD automation, health checks, security hardening, and rollback procedures for **FoodBridge**.
 
 ---
