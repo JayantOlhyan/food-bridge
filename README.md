@@ -8,7 +8,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-food--bridge--01.netlify.app-16a34a?style=for-the-badge&logo=netlify&logoColor=white)](https://food-bridge-01.netlify.app/)
 [![CI](https://github.com/JayantOlhyan/food-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/JayantOlhyan/food-bridge/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/Tests-72%20passing-16a34a)](./server/tests)
+[![Tests](https://img.shields.io/badge/Tests-65%20passing-16a34a)](./server/tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](./package.json)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](./client/package.json)
@@ -274,7 +274,7 @@ npm run seed
 npm run check
 
 # Individual commands
-npm test          # 72 Vitest unit & integration tests across 8 suites
+npm test          # 65 Vitest unit & integration tests across 8 suites
 npm run typecheck # TypeScript typecheck across client
 npm run lint      # ESLint across entire repository
 npm run build     # Production Vite bundle with vendor chunk splitting
