@@ -1,4 +1,7 @@
 import 'dotenv/config';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -17,7 +20,31 @@ import {
 
 process.env.DEMO_MODE ??= 'true';
 export const app=express();
+app.disable('x-powered-by');
+app.use((_req,res,next)=>{
+  res.setHeader('X-Content-Type-Options','nosniff');
+  res.setHeader('X-Frame-Options','DENY');
+  res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy','geolocation=(self)');
+  if(process.env.NODE_ENV==='production'){
+    res.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');
+  }
+  next();
+});
 app.use(cors({origin:(process.env.CLIENT_ORIGIN||'http://localhost:5173').split(',')}));app.use(express.json({limit:'100kb'}));
+
+const healthHandler=(_req,res)=>{
+  const dbReady=mongoose.connection.readyState===1;
+  res.status(dbReady?200:503).json({
+    status:dbReady?'ok':'degraded',
+    database:dbReady?'connected':'disconnected',
+    uptimeSeconds:Math.round(process.uptime()),
+    demoMode:process.env.DEMO_MODE==='true',
+    timestamp:new Date().toISOString()
+  });
+};
+app.get('/healthz',healthHandler);
+app.get('/api/health',healthHandler);
 const route=fn=>(req,res,next)=>Promise.resolve(fn(req,res)).catch(next);
 const fail=(message,status=409)=>Object.assign(new Error(message),{status});
 const id=z.string().regex(/^[a-f0-9]{24}$/i,'Invalid identifier');
@@ -61,7 +88,6 @@ app.post('/api/listings/:id/cancel',route(async(req,res)=>{const listingId=id.pa
 app.get('/api/notifications',route(async(req,res)=>res.json(await Notification.find({recipientId:id.parse(req.query.recipientId)}).sort({createdAt:-1}).limit(30))));
 app.post('/api/notifications/:id/read',route(async(req,res)=>{const n=await Notification.findByIdAndUpdate(id.parse(req.params.id),{read:true},{new:true});if(!n)throw fail('Notification not found',404);res.json(n);}));
 app.get('/api/impact',route(async(req,res)=>{let pickups=await Pickup.find({status:'DELIVERED',...(req.query.ngoId?{ngoId:id.parse(req.query.ngoId)}:{})}).populate('listingId').populate('ngoId').lean();if(req.query.organizerId)pickups=pickups.filter(p=>String(p.listingId.organizerId)===id.parse(req.query.organizerId));const meals=pickups.reduce((s,p)=>s+(p.deliveredMeals||0),0),kg=pickups.reduce((s,p)=>s+(p.deliveredKg||0),0);const days={};for(const p of pickups){const day=p.deliveredAt.toISOString().slice(0,10);days[day]=(days[day]||0)+p.deliveredMeals;}res.json({meals,kg,deliveries:pickups.length,co2:kg*config.co2Factor,factor:config.co2Factor,assumption:config.co2Assumption,history:Object.entries(days).sort().map(([date,meals])=>({date,meals})),recent:pickups.sort((a,b)=>b.deliveredAt-a.deliveredAt)});}));
-
 // Prune AI Gateway Endpoints
 app.get('/api/ai/status',route(async(_req,res)=>res.json(getPruneMetrics())));
 app.get('/api/prune/metrics',route(async(_req,res)=>res.json(getPruneMetrics())));
@@ -72,4 +98,12 @@ app.post('/api/ai/recall',route(async(req,res)=>{const schema=z.object({query:z.
 let resetting=false;
 app.post('/api/demo/reset',route(async(_req,res)=>{if(process.env.DEMO_MODE!=='true')throw fail('Demo reset is disabled',403);if(resetting)throw fail('Reset is already in progress');resetting=true;try{await seed();res.json({ok:true});}finally{resetting=false;}}));
 app.use('/api',(_req,res)=>res.status(404).json({error:'API route not found',details:null}));
+
+const __dirname=path.dirname(fileURLToPath(import.meta.url));
+const clientDistDir=path.resolve(__dirname,'../client/dist');
+if((process.env.SERVE_STATIC==='true'||process.env.NODE_ENV==='production')&&fs.existsSync(clientDistDir)){
+  app.use(express.static(clientDistDir));
+  app.get('*',(_req,res)=>res.sendFile(path.join(clientDistDir,'index.html')));
+}
+
 app.use((error,_req,res,_next)=>{const status=error instanceof ZodError?400:error.status||500;if(status===500)console.error(error);res.status(status).json({error:error instanceof ZodError?'Invalid request':status===500?'Internal server error':error.message,details:error instanceof ZodError?error.flatten():null});});

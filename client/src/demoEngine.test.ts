@@ -1,0 +1,139 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import {
+  eligibility,
+  handleDemoApi,
+  haversineKm,
+  urgency,
+  type Listing,
+  type MatchResult,
+  type Ngo,
+  type Organizer,
+  type Pickup
+} from './demoEngine';
+
+describe('Standalone Client Demo Engine', () => {
+  beforeEach(async () => {
+    await handleDemoApi('/demo/reset', {});
+  });
+
+  it('computes accurate haversine distance and urgency buckets', () => {
+    const dist = haversineKm({ lat: 28.6139, lng: 77.209 }, { lat: 28.6139, lng: 77.209 });
+    expect(dist).toBe(0);
+
+    const now = Date.now();
+    expect(urgency(new Date(now + 30 * 60000).toISOString(), new Date(now))).toBe('High');
+    expect(urgency(new Date(now + 120 * 60000).toISOString(), new Date(now))).toBe('Medium');
+    expect(urgency(new Date(now + 240 * 60000).toISOString(), new Date(now))).toBe('Low');
+  });
+
+  it('rejects expired room-temperature food in safety eligibility check', () => {
+    const now = Date.now();
+    const result = eligibility(
+      {
+        preparedAt: new Date(now - 3 * 3600000).toISOString(),
+        holdingCondition: 'room-temperature',
+        quantityMeals: 30,
+        pickupWindowStart: new Date(now).toISOString(),
+        pickupWindowEnd: new Date(now + 2 * 3600000).toISOString()
+      },
+      new Date(now)
+    );
+    expect(result.eligible).toBe(false);
+    expect(result.reasons.length).toBeGreaterThan(0);
+  });
+
+  it('bootstraps seeded organizers, NGOs, and completes full rescue lifecycle', async () => {
+    const boot = (await handleDemoApi('/bootstrap')) as {
+      organizers: Organizer[];
+      ngos: Ngo[];
+      demoMode: boolean;
+    };
+    expect(boot.organizers.length).toBeGreaterThan(0);
+    expect(boot.ngos.length).toBeGreaterThanOrEqual(7);
+    expect(boot.demoMode).toBe(true);
+
+    const organizer = boot.organizers[0];
+    const now = Date.now();
+
+    const created = (await handleDemoApi('/listings', {
+      organizerId: organizer._id,
+      eventName: 'Client Engine Verification Banquet',
+      eventType: 'Wedding',
+      location: organizer.location,
+      foodItems: [{ name: 'Veg Pulao & Dal', dietType: 'veg', category: 'Main' }],
+      quantityMeals: 25,
+      quantityKg: 10,
+      preparedAt: new Date(now - 20 * 60000).toISOString(),
+      holdingCondition: 'hot-held',
+      packagingAvailable: true,
+      pickupWindowStart: new Date(now).toISOString(),
+      pickupWindowEnd: new Date(now + 120 * 60000).toISOString()
+    })) as Listing;
+    expect(created.status).toBe('POSTED');
+
+    const matches = (await handleDemoApi(`/listings/${created._id}/matches`)) as MatchResult[];
+    const topFull = matches.find(m => m.feasible && m.matchType === 'Full match');
+    expect(topFull).toBeDefined();
+
+    const pickup = (await handleDemoApi(`/listings/${created._id}/accept`, {
+      ngoId: topFull!.ngoId
+    })) as Pickup;
+    expect(pickup.status).toBe('ACCEPTED');
+
+    const collected = (await handleDemoApi(`/pickups/${pickup._id}/collect`, {})) as Pickup;
+    expect(collected.status).toBe('COLLECTED');
+
+    const delivered = (await handleDemoApi(`/pickups/${pickup._id}/deliver`, {
+      deliveredMeals: 25,
+      deliveredKg: 10,
+      goodCondition: true
+    })) as Pickup;
+    expect(delivered.status).toBe('DELIVERED');
+
+    const impact = (await handleDemoApi('/impact')) as {
+      meals: number;
+      kg: number;
+      co2: number;
+      deliveries: number;
+    };
+    expect(impact.meals).toBeGreaterThanOrEqual(25);
+    expect(impact.co2).toBeCloseTo(impact.kg * 2.5, 4);
+  });
+
+  it('restores NGO capacity when an accepted listing is cancelled', async () => {
+    const boot = (await handleDemoApi('/bootstrap')) as {
+      organizers: Organizer[];
+      ngos: Ngo[];
+    };
+    const organizer = boot.organizers[0];
+    const now = Date.now();
+
+    const created = (await handleDemoApi('/listings', {
+      organizerId: organizer._id,
+      eventName: 'Cancellation Capacity Test',
+      eventType: 'Banquet',
+      location: organizer.location,
+      foodItems: [{ name: 'Paneer & Roti', dietType: 'veg', category: 'Main' }],
+      quantityMeals: 15,
+      preparedAt: new Date(now - 15 * 60000).toISOString(),
+      holdingCondition: 'hot-held',
+      packagingAvailable: true,
+      pickupWindowStart: new Date(now).toISOString(),
+      pickupWindowEnd: new Date(now + 120 * 60000).toISOString()
+    })) as Listing;
+
+    const matches = (await handleDemoApi(`/listings/${created._id}/matches`)) as MatchResult[];
+    const chosen = matches.find(m => m.feasible && m.matchType === 'Full match')!;
+    const beforeCapacity = chosen.ngo.remainingCapacityMeals;
+
+    await handleDemoApi(`/listings/${created._id}/accept`, { ngoId: chosen.ngoId });
+    const midBoot = (await handleDemoApi('/bootstrap')) as { ngos: Ngo[] };
+    const afterAccept = midBoot.ngos.find(n => n._id === chosen.ngoId)!.remainingCapacityMeals;
+    expect(afterAccept).toBe(beforeCapacity - 15);
+
+    await handleDemoApi(`/listings/${created._id}/cancel`, { reason: 'Test cancellation' });
+    const finalBoot = (await handleDemoApi('/bootstrap')) as { ngos: Ngo[] };
+    const afterCancel = finalBoot.ngos.find(n => n._id === chosen.ngoId)!.remainingCapacityMeals;
+    expect(afterCancel).toBe(beforeCapacity);
+  });
+});
