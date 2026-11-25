@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import { api, left, time, photo, relativeTime } from './api';
+import { estimateTravel } from './demoEngine';
 import { Brand, Badge, Stats, ImpactStats, ListingsTable } from './components';
 import MapView from './MapView';
 import NewListing from './NewListing';
@@ -58,6 +59,8 @@ export default function App() {
   const [completed, setCompleted] = useState(false);
   const [declined, setDeclined] = useState<string[]>([]);
   const [showToast, setShowToast] = useState(true);
+  const [expandedMatchId, setExpandedMatchId] = useState<string | null>(null);
+  const [impactRange, setImpactRange] = useState<'7d' | '30d' | 'all'>('7d');
 
   const organizer = role === 'organizer';
   const screen = route.pathname.split('/')[2] || 'dashboard';
@@ -139,10 +142,10 @@ export default function App() {
     return (
       <main className="loading">
         <Brand />
-        <p role="status">{error || 'Connecting to the food rescue network…'}</p>
+        <p role="status">{error || 'Loading interactive demo…'}</p>
         {error && (
           <button className="button" onClick={() => window.location.reload()}>
-            Retry connection
+            Reload demo
           </button>
         )}
       </main>
@@ -497,9 +500,26 @@ export default function App() {
                                     <Truck size={14} /> Send pickup request / Switch to NGO
                                   </button>
                                 ) : (
-                                  <button className="button secondary small">View details</button>
+                                  <button
+                                    type="button"
+                                    className="button secondary small"
+                                    onClick={() =>
+                                      setExpandedMatchId(expandedMatchId === m.ngoId ? null : m.ngoId)
+                                    }
+                                  >
+                                    {expandedMatchId === m.ngoId ? 'Hide details' : 'View details'}
+                                  </button>
                                 )}
                               </div>
+                              {expandedMatchId === m.ngoId && (
+                                <p className="fine-print">
+                                  Hours: {m.ngo.availableFrom}–{m.ngo.availableTo} IST · Diet:{' '}
+                                  {m.ngo.acceptsNonVeg ? 'Veg & Non-veg' : 'Veg only'} · Daily
+                                  capacity: {m.ngo.dailyCapacityMeals} meals · Vehicle:{' '}
+                                  {m.ngo.hasVehicle ? 'Yes' : 'No'} · Status:{' '}
+                                  {m.ngo.active ? 'Active' : 'Inactive'}
+                                </p>
+                              )}
                             </article>
                           );
                         })}
@@ -514,10 +534,13 @@ export default function App() {
                           Locations on Map
                         </h2>
                         <span className="tiny-label">
-                          View larger <ExternalLink size={12} />
+                          Interactive map <ExternalLink size={12} />
                         </span>
                       </div>
-                      <MapView location={selected.location} ngos={matches.map(m => m.ngo)} />
+                      <MapView
+                        location={selected.location}
+                        ngos={matches.map(m => ({ ...m.ngo, matchType: m.matchType }))}
+                      />
                       <p className="fine-print">
                         Matching considers safety, time margin, distance, and capacity — not just
                         proximity. Travel uses mock Delhi coordinates with an 8-min buffer.
@@ -564,7 +587,7 @@ export default function App() {
               {screen === 'dashboard' && (
                 <>
                   <Stats impact={impact} listings={listings} />
-                  <p className="demo-caption">Demo data · Updates live every 5 seconds</p>
+                  <p className="demo-caption">100% browser-based demo data · Saved locally</p>
 
                   <div className="dashboard-grid">
                     <section className="card">
@@ -854,7 +877,13 @@ export default function App() {
                                     Volunteer: {p.volunteerName || 'Rahul Sharma'}
                                   </p>
                                   <p className="eta-note">
-                                    <MapPin size={12} /> 2.0 km · ETA at pickup: 14 min
+                                    <MapPin size={12} />{' '}
+                                    {listing?.location && ngo?.location
+                                      ? (() => {
+                                          const travel = estimateTravel(listing.location, ngo.location);
+                                          return `${travel.distanceKm.toFixed(1)} km · ETA at pickup: ${travel.etaMinutes} min`;
+                                        })()
+                                      : '2.0 km · ETA at pickup: 14 min'}
                                   </p>
                                 </div>
                               </div>
@@ -994,7 +1023,11 @@ export default function App() {
                           <ChartNoAxesColumn />
                           Meals redistributed over time
                         </h2>
-                        <select className="filter-select" defaultValue="7d">
+                        <select
+                          className="filter-select"
+                          value={impactRange}
+                          onChange={e => setImpactRange(e.target.value as '7d' | '30d' | 'all')}
+                        >
                           <option value="7d">Last 7 days</option>
                           <option value="30d">Last 30 days</option>
                           <option value="all">All time</option>
@@ -1004,7 +1037,11 @@ export default function App() {
                       <div className="chart">
                         <ResponsiveContainer width="100%" height="100%">
                           <AreaChart
-                            data={impact.history}
+                            data={impact.history.filter((entry: { date: string }) => {
+                              if (impactRange === 'all') return true;
+                              const days = impactRange === '7d' ? 7 : 30;
+                              return Date.now() - +new Date(entry.date) <= days * 86400000;
+                            })}
                             margin={{ top: 20, right: 15, left: -20, bottom: 10 }}
                           >
                             <defs>
@@ -1101,7 +1138,7 @@ export default function App() {
               <Leaf size={14} />
               FoodBridge · Hackathon prototype
             </span>
-            <span>Demo login · Simulated alerts · Mock Delhi coordinates</span>
+            <span>100% local demo data · Simulated alerts · Mock Delhi coordinates</span>
           </footer>
         </main>
       </div>
