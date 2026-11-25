@@ -1,13 +1,8 @@
-export async function api(path: string, body?: unknown) {
-  const response = await fetch(
-    `/api${path}`,
-    body === undefined
-      ? undefined
-      : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-  );
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error + (data.details ? ' — check the entered fields.' : ''));
-  return data;
+import { handleDemoApi } from './demoEngine';
+
+export async function api(path: string, body?: unknown): Promise<any> {
+  // 100% client-side demo engine — no backend server, database, or API keys required.
+  return handleDemoApi(path, body);
 }
 
 export const time = (date: string) =>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   Leaf,
@@ -66,6 +66,7 @@ const steps = [
 ] as const;
 
 export default function Landing() {
+  const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
   const [data, setData] = useState<any>(null);
   const [failure, setFailure] = useState(false);
@@ -239,7 +240,7 @@ export default function Landing() {
         <section className="live-preview wrap reveal-on-scroll" aria-label="Live app preview">
           <div className="preview-heading">
             <span className="preview-dot" />
-            Inside FoodBridge <span>Live API · Demo data</span>
+            Inside FoodBridge <span>100% In-Browser · Demo data</span>
             <Link to="/app">
               Open dashboard <ArrowRight size={16} />
             </Link>
@@ -276,14 +277,14 @@ export default function Landing() {
                     listings={data.listings
                       .filter((l: any) => l.status === 'POSTED')
                       .slice(0, 2)}
-                    onSelect={l => window.location.assign(`/app/matches/${l._id}`)}
+                    onSelect={l => navigate(`/app/matches/${l._id}`)}
                   />
                 </>
               ) : (
                 <p className="empty">
                   {failure
-                    ? 'Start the API to see the live dashboard preview.'
-                    : 'Loading live demo listings…'}
+                    ? 'Could not load demo data. Refresh to retry.'
+                    : 'Loading interactive demo listings…'}
                 </p>
               )}
             </div>
@@ -714,10 +715,15 @@ export default function Landing() {
           </div>
           <div className="footer-bottom">
             <p>© {new Date().getFullYear()} FoodBridge · Hackathon prototype</p>
-            <span>
+            <a
+              href="https://github.com/JayantOlhyan/food-bridge"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '9px' }}
+            >
               <Github size={17} />
-              GitHub · Repository link coming soon
-            </span>
+              GitHub · JayantOlhyan/food-bridge
+            </a>
           </div>
         </div>
       </footer>

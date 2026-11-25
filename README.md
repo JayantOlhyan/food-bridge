@@ -82,7 +82,9 @@ FoodBridge solves this with a **deterministic, safety-first matching engine**:
 | **Pickup Tracking & Handover** | **Implemented (MVP)** | Tracker (`POSTED → ACCEPTED → COLLECTED → DELIVERED`), volunteer confirmation, verified delivered meals & kg input. |
 | **Impact Dashboard** | **Implemented (MVP)** | Confirmed delivered meals, kg rescued, deliveries, estimated CO2e avoided (`kg * 2.5`), Recharts timeline. |
 | **Interactive Map** | **Implemented (MVP)** | Leaflet + OpenStreetMap tiles with mock Delhi coordinates, venue pins, NGO color-coded markers, travel polylines. |
-| **Database & Concurrency** | **Implemented (MVP)** | Ephemeral MongoDB replica set (`mongodb-memory-server`) or Atlas; atomic `findOneAndUpdate` prevents double accepts. |
+| **Standalone Demo Engine** | **Implemented (MVP)** | 100% browser-based demo engine (`client/src/demoEngine.ts`) with `localStorage` persistence, seeded Delhi demo data, safety filter, matching engine, and 1-click Reset Demo — requires zero backend servers, databases, or API keys. |
+| **AI Copilot & Memory Insights** | **Implemented (MVP)** | Hindsight-backed memory service (`server/services/hindsight.js`), AI Copilot (`client/src/AiCopilot.tsx`), and Memory Insights Panel (`client/src/MemoryInsightsPanel.tsx`) for historical rescue recommendations and patterns. |
+| **Database & Concurrency** | **Implemented (MVP)** | Optional Express + MongoDB backend (`server/`) with ephemeral replica set (`mongodb-memory-server`) or Atlas; atomic `findOneAndUpdate` prevents double accepts. |
 | **Automated Testing** | **Implemented (MVP)** | 19 Vitest unit and integration tests covering the 40-meal scenario, safety filters, atomic accept, and state transitions. |
 | **Authentication** | **Simulated (MVP)** | Demo login role switcher in topbar (`Organizer: Sample Wedding Caterer`, `NGO A` to `NGO G`). *Firebase Auth is planned.* |
 | **Notifications** | **Simulated (MVP)** | In-app simulated alerts with notification bell and 5s polling. *Firebase Cloud Messaging (FCM) is planned.* |
@@ -150,7 +152,7 @@ $$\text{Score} = 100 \times \left( 0.4 \times \frac{\text{margin}}{\text{maxMarg
 
 ### 1. Clone & Install
 ```bash
-git clone <repo-url> FoodBridge
+git clone https://github.com/JayantOlhyan/food-bridge.git FoodBridge
 cd FoodBridge
 npm install
 ```
@@ -166,6 +168,10 @@ MONGODB_URI=
 PORT=4000
 DEMO_MODE=true
 CLIENT_ORIGIN=http://localhost:5173
+# Optional: Hindsight Memory Configuration (for AI Copilot & Memory Insights)
+HINDSIGHT_API_URL=https://api.hindsight.vectorize.io
+HINDSIGHT_API_KEY=your_hindsight_api_key_here
+HINDSIGHT_BANK_ID=foodbridge
 ```
 *(Leave `MONGODB_URI` empty to use the zero-configuration embedded MongoDB replica set).*
 
@@ -255,13 +261,17 @@ Follow this script during your pitch presentation:
 
 ## Deployment Guide
 
-### Client (Vercel / Netlify)
+### Standalone Static Demo Site (Netlify / Vercel / Static Host — Recommended)
+The frontend (`client/`) ships with a 100% client-side demo engine (`client/src/demoEngine.ts`) that bundles all seeded demo data, safety eligibility checks, feasibility matching, pickup tracking, impact metrics, simulated alerts, and `localStorage` persistence directly into the static bundle. **No backend server, database, or API keys are required.**
+
 1. Root directory: `client`
 2. Build command: `npm run build`
 3. Output directory: `dist`
-4. Set environment variable: `VITE_API_URL=https://your-server-api.onrender.com`
+4. Environment variables: **None required**
+5. SPA routing: pre-configured via `client/public/_redirects` (Netlify) and `client/vercel.json` (Vercel)
 
-### Server (Render / Railway / Fly.io)
+### Optional Full-Stack Server (Render / Railway / Fly.io)
+If you want to run the optional Express + MongoDB backend alongside the repo:
 1. Build command: `npm install`
 2. Start command: `node server/index.js`
 3. Environment variables:

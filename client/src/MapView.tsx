@@ -52,8 +52,8 @@ export default function MapView({
 
           {/* NGO Markers */}
           {ngos.map((n, i) => {
-            const isFull = n.matchType === 'Full match' || i === 0;
-            const isPartial = n.matchType === 'Partial' || i === 1;
+            const isFull = n.matchType ? n.matchType === 'Full match' : i === 0;
+            const isPartial = n.matchType ? n.matchType === 'Partial' : i === 1;
             const color = isFull ? '#2e7d32' : isPartial ? '#1e6bb8' : '#757575';
 
             return (
