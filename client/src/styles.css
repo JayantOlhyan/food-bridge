@@ -1681,6 +1681,7 @@
   border-radius: 10px;
   padding: 16px 20px;
 }
+/* Section title for itemized baseline vs memory score deltas */
 .differences-breakdown-card h5 {
   font-size: 13px;
   color: #1f3d2b;
