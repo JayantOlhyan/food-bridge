@@ -232,4 +232,12 @@ describe('Standalone Client Demo Engine', () => {
     };
     expect(reply.answer.length).toBeGreaterThan(10);
   });
+
+  it('keeps demo reset idempotent across repeated invocations', async () => {
+    await handleDemoApi('/demo/reset', {});
+    const first = (await handleDemoApi('/listings')) as Listing[];
+    await handleDemoApi('/demo/reset', {});
+    const second = (await handleDemoApi('/listings')) as Listing[];
+    expect(second.length).toBe(first.length);
+  });
 });
