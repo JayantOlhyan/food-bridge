@@ -85,7 +85,8 @@ FoodBridge solves this with a **deterministic, safety-first matching engine**:
 | **Standalone Demo Engine** | **Implemented (MVP)** | 100% browser-based demo engine (`client/src/demoEngine.ts`) with `localStorage` persistence, seeded Delhi demo data, safety filter, matching engine, and 1-click Reset Demo — requires zero backend servers, databases, or API keys. |
 | **AI Copilot & Memory Insights** | **Implemented (MVP)** | Hindsight-backed memory service (`server/services/hindsight.js`), AI Copilot (`client/src/AiCopilot.tsx`), and Memory Insights Panel (`client/src/MemoryInsightsPanel.tsx`) for historical rescue recommendations and patterns. |
 | **Database & Concurrency** | **Implemented (MVP)** | Optional Express + MongoDB backend (`server/`) with ephemeral replica set (`mongodb-memory-server`) or Atlas; atomic `findOneAndUpdate` prevents double accepts. |
-| **Automated Testing** | **Implemented (MVP)** | 19 Vitest unit and integration tests covering the 40-meal scenario, safety filters, atomic accept, and state transitions. |
+| **Automated Testing** | **Implemented (MVP)** | 52 Vitest unit and integration tests across 8 suites covering the 40-meal scenario, safety filters, atomic accept, Hindsight memory & offline fallback, production healthchecks, security headers, and standalone client `demoEngine`. |
+| **Deployment & CI/CD** | **Implemented (MVP)** | Multi-stage `Dockerfile`, MongoDB replica-set `docker-compose.yml`, declarative `netlify.toml`, `vercel.json`, `render.yaml`, GitHub Actions CI/CD (`.github/workflows/`), `/healthz` readiness checks, and full [`DEPLOYMENT.md`](./DEPLOYMENT.md) runbook. |
 | **Authentication** | **Simulated (MVP)** | Demo login role switcher in topbar (`Organizer: Sample Wedding Caterer`, `NGO A` to `NGO G`). *Firebase Auth is planned.* |
 | **Notifications** | **Simulated (MVP)** | In-app simulated alerts with notification bell and 5s polling. *Firebase Cloud Messaging (FCM) is planned.* |
 | **SMS / Push / Payment** | **Planned** | Out of scope for hackathon MVP; marked as planned in UI and documentation. |
@@ -195,7 +196,10 @@ npm run seed
 
 Run the automated test suite:
 ```bash
-# Run Vitest unit & integration tests
+# Run all verification gates (typecheck, lint, tests, production build)
+npm run check
+
+# Run Vitest unit & integration tests (52 tests across 8 suites)
 npm test
 
 # Run TypeScript typecheck across client
@@ -261,24 +265,26 @@ Follow this script during your pitch presentation:
 
 ## Deployment Guide
 
-### Standalone Static Demo Site (Netlify / Vercel / Static Host — Recommended)
+For the complete production architecture, environment matrix, CI/CD secrets, health checks, security hardening, and rollback procedures, see **[`DEPLOYMENT.md`](./DEPLOYMENT.md)**.
+
+### 1. Docker & Docker Compose (Full-Stack Containerized)
+Launch the multi-stage production container (Express API + built React SPA) alongside a MongoDB replica set with one command:
+```bash
+docker compose up -d --build
+curl -fsS http://localhost:4000/healthz
+```
+
+### 2. Standalone Static Demo Site (Netlify / Vercel)
 The frontend (`client/`) ships with a 100% client-side demo engine (`client/src/demoEngine.ts`) that bundles all seeded demo data, safety eligibility checks, feasibility matching, pickup tracking, impact metrics, simulated alerts, and `localStorage` persistence directly into the static bundle. **No backend server, database, or API keys are required.**
+- **Netlify**: Pre-configured via root [`netlify.toml`](./netlify.toml) and `client/public/_redirects`.
+- **Vercel**: Pre-configured via root [`vercel.json`](./vercel.json) and `client/vercel.json`.
 
-1. Root directory: `client`
-2. Build command: `npm run build`
-3. Output directory: `dist`
-4. Environment variables: **None required**
-5. SPA routing: pre-configured via `client/public/_redirects` (Netlify) and `client/vercel.json` (Vercel)
+### 3. Managed Full-Stack PaaS (Render Blueprint)
+Connect the repository on Render as a Blueprint — [`render.yaml`](./render.yaml) automatically configures `npm ci && npm run build`, `node server/index.js`, `/healthz` readiness checks, and static SPA serving (`SERVE_STATIC=true`). Configure `MONGODB_URI` (MongoDB Atlas) and `CLIENT_ORIGIN` in the Render dashboard.
 
-### Optional Full-Stack Server (Render / Railway / Fly.io)
-If you want to run the optional Express + MongoDB backend alongside the repo:
-1. Build command: `npm install`
-2. Start command: `node server/index.js`
-3. Environment variables:
-   - `MONGODB_URI`: Connection string to MongoDB Atlas cluster
-   - `PORT`: 4000 (or provided by host)
-   - `CLIENT_ORIGIN`: `https://your-frontend.vercel.app`
-   - `DEMO_MODE`: `true` (enables `/api/demo/reset`)
+### 4. Automated CI/CD (GitHub Actions)
+- **[`.github/workflows/ci.yml`](./.github/workflows/ci.yml)**: Runs `typecheck`, `lint`, `test`, and `build` on every push and pull request.
+- **[`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)**: Runs `npm run check` as a pre-deploy gate before deploying to Netlify and/or triggering a Render deploy hook.
 
 ---
 
