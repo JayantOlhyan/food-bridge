@@ -33,3 +33,7 @@ Renders Leaflet markers for event venues and candidate NGOs, route polylines, ma
 ## AI Dispatch Copilot (`AiCopilot.tsx`)
 
 Provides a tabbed modal with suggested dispatch prompts, recalled operational citations, cache-hit badges, and an interactive memory search explorer.
+
+## Memory Insights Panel (`MemoryInsightsPanel.tsx`)
+
+Visualizes top-candidate score breakdowns, recalled delivery/incident evidence cards, and side-by-side deterministic vs memory-enriched rankings.
