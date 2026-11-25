@@ -687,6 +687,7 @@ function nextStoreId(store: DemoStore, prefix: string): string {
   return makeId(prefix, store.seq);
 }
 
+/** Client-side router emulating FoodBridge REST and AI endpoints offline. */
 export async function handleDemoApi(path: string, body?: unknown): Promise<unknown> {
   const store = loadStore();
   const [pathname, queryString = ''] = path.split('?');
