@@ -8,12 +8,12 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-food--bridge--01.netlify.app-16a34a?style=for-the-badge&logo=netlify&logoColor=white)](https://food-bridge-01.netlify.app/)
 [![CI](https://github.com/JayantOlhyan/food-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/JayantOlhyan/food-bridge/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/Tests-52%20passing-16a34a)](./server/tests)
+[![Tests](https://img.shields.io/badge/Tests-72%20passing-16a34a)](./server/tests)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Node](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](./package.json)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](./client/package.json)
 
-**[Launch Live Demo](https://food-bridge-01.netlify.app/)** · **[Deployment Runbook](./DEPLOYMENT.md)** · **[Contributing](./CONTRIBUTING.md)** · **[3-Minute Demo Script](#3-minute-hackathon-demo-script)**
+**[Launch Live Demo](https://food-bridge-01.netlify.app/)** · **[Technical Docs](./docs/ARCHITECTURE.md)** · **[Deployment Runbook](./DEPLOYMENT.md)** · **[Contributing](./CONTRIBUTING.md)** · **[3-Minute Demo Script](#3-minute-hackathon-demo-script)**
 
 </div>
 
@@ -274,11 +274,26 @@ npm run seed
 npm run check
 
 # Individual commands
-npm test          # 52 Vitest unit & integration tests across 8 suites
+npm test          # 72 Vitest unit & integration tests across 8 suites
 npm run typecheck # TypeScript typecheck across client
 npm run lint      # ESLint across entire repository
 npm run build     # Production Vite bundle with vendor chunk splitting
 ```
+
+### Technical Reference Documentation (`docs/`)
+
+| Document | Focus |
+|---|---|
+| [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Layered system topology, MongoDB transactions, and deployment modes |
+| [`docs/API_REFERENCE.md`](./docs/API_REFERENCE.md) | REST endpoints, Zod validation, and lifecycle transitions |
+| [`docs/FOOD_SAFETY_RULES.md`](./docs/FOOD_SAFETY_RULES.md) | Holding ceilings, lead-time guardrails, and expiry sweeps |
+| [`docs/MATCHING_ALGORITHM.md`](./docs/MATCHING_ALGORITHM.md) | Haversine routing, IST availability, and 40/35/25 scoring weights |
+| [`docs/DEMO_ENGINE.md`](./docs/DEMO_ENGINE.md) | Browser-native standalone demo store and client router |
+| [`docs/HINDSIGHT_MEMORY.md`](./docs/HINDSIGHT_MEMORY.md) | Offline local fallback store, TTL cache, and telemetry counters |
+| [`docs/FRONTEND_MODULES.md`](./docs/FRONTEND_MODULES.md) | React 19 UI components, Leaflet map, and Insights views |
+| [`docs/TESTING_GUIDE.md`](./docs/TESTING_GUIDE.md) | Vitest suites, edge-case coverage, and CI verification gates |
+| [`docs/OPERATIONS_CHECKLIST.md`](./docs/OPERATIONS_CHECKLIST.md) | Release verification, container readiness, and demo recovery |
+| [`docs/GLOSSARY.md`](./docs/GLOSSARY.md) | Domain actors, safety definitions, and rescue lifecycle states |
 
 ---
 
