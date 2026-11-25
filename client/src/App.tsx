@@ -24,7 +24,8 @@ import {
   MinusCircle,
   Calendar,
   ExternalLink,
-  ChevronLeft
+  ChevronLeft,
+  Sparkles
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
 import { api, left, time, photo, relativeTime } from './api';
@@ -32,6 +33,8 @@ import { estimateTravel } from './demoEngine';
 import { Brand, Badge, Stats, ImpactStats, ListingsTable } from './components';
 import MapView from './MapView';
 import NewListing from './NewListing';
+import AiCopilot from './AiCopilot';
+import MemoryInsightsPanel from './MemoryInsightsPanel';
 
 export default function App() {
   const navigate = useNavigate();
@@ -50,6 +53,11 @@ export default function App() {
   const [impact, setImpact] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [matches, setMatches] = useState<any[]>([]);
+  const [memoryMatches, setMemoryMatches] = useState<any[]>([]);
+  const [baselineMatches, setBaselineMatches] = useState<any[]>([]);
+  const [demoMode, setDemoMode] = useState<'memory' | 'baseline' | 'compare'>('memory');
+  const [hindsightAvailable, setHindsightAvailable] = useState(true);
+  const [matchesLoading, setMatchesLoading] = useState(false);
   const [selected, setSelected] = useState<any>(null);
   const [error, setError] = useState('');
   const [menu, setMenu] = useState(false);
@@ -61,6 +69,7 @@ export default function App() {
   const [showToast, setShowToast] = useState(true);
   const [expandedMatchId, setExpandedMatchId] = useState<string | null>(null);
   const [impactRange, setImpactRange] = useState<'7d' | '30d' | 'all'>('7d');
+  const [showAi, setShowAi] = useState(false);
 
   const organizer = role === 'organizer';
   const screen = route.pathname.split('/')[2] || 'dashboard';
@@ -109,14 +118,50 @@ export default function App() {
 
   useEffect(() => {
     if (params.id) {
+      let isMounted = true;
       api(`/listings/${params.id}`)
-        .then(setSelected)
-        .catch(e => setError(e.message));
-      api(`/listings/${params.id}/matches`)
-        .then(setMatches)
-        .catch(e => setError(e.message));
+        .then(data => {
+          if (isMounted) setSelected(data);
+        })
+        .catch(e => {
+          if (isMounted) setError(e.message);
+        });
+
+      setMatchesLoading(true);
+      Promise.all([
+        api(`/listings/${params.id}/matches?memory=true`),
+        api(`/listings/${params.id}/matches?memory=false`),
+        api('/ai/status').catch(() => ({ connected: false }))
+      ])
+        .then(([memRes, baseRes, aiStat]) => {
+          if (!isMounted) return;
+          const mem = Array.isArray(memRes) ? memRes : [];
+          const base = Array.isArray(baseRes) ? baseRes : [];
+          setMemoryMatches(mem);
+          setBaselineMatches(base);
+          setHindsightAvailable(Boolean(aiStat?.connected));
+          setMatches(demoMode === 'baseline' ? base : mem);
+        })
+        .catch(e => {
+          if (isMounted) setError(e.message);
+        })
+        .finally(() => {
+          if (isMounted) setMatchesLoading(false);
+        });
+
+      return () => {
+        isMounted = false;
+      };
     }
   }, [params.id]);
+
+  useEffect(() => {
+    if (demoMode === 'baseline') {
+      setMatches(baselineMatches);
+    } else {
+      setMatches(memoryMatches);
+    }
+  }, [demoMode, baselineMatches, memoryMatches]);
 
   async function action(path: string, body: unknown = {}) {
     setBusy(true);
@@ -268,6 +313,17 @@ export default function App() {
             </div>
 
             <button
+              className={`ai-copilot-btn ${showAi ? 'active' : ''}`}
+              aria-label="Open AI Rescue Copilot"
+              onClick={() => setShowAi(true)}
+              title="Open FoodBridge AI Copilot powered by Vectorize Hindsight"
+            >
+              <Sparkles size={16} />
+              <span>AI Copilot</span>
+              <span className="ai-dot" />
+            </button>
+
+            <button
               className="icon-button bell"
               aria-label="Show simulated alerts"
               aria-expanded={bell}
@@ -401,6 +457,19 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Hindsight Memory Insights Panel & Mode Demonstration */}
+                  {selected && (
+                    <MemoryInsightsPanel
+                      listing={selected}
+                      memoryMatches={memoryMatches}
+                      baselineMatches={baselineMatches}
+                      hindsightAvailable={hindsightAvailable}
+                      activeMode={demoMode}
+                      onModeChange={setDemoMode}
+                      loading={matchesLoading}
+                    />
+                  )}
+
                   <div className="matches-layout">
                     {/* Left Column: Ranked NGOs */}
                     <section className="card matches-card">
@@ -409,9 +478,15 @@ export default function App() {
                           <Users />
                           Ranked NGOs
                         </h2>
-                        <span className="tiny-label">Feasibility First</span>
+                        <span className="tiny-label">
+                          {demoMode === 'baseline' ? 'Baseline Mode' : 'Memory-Informed'}
+                        </span>
                       </div>
-                      <p className="muted">Showing safety-eligible, feasible matches first</p>
+                      <p className="muted">
+                        {demoMode === 'baseline'
+                          ? 'Showing safety-eligible candidates evaluated strictly by proximity & capacity (historical memory excluded)'
+                          : 'Showing safety-eligible candidates enriched with verified delivery and transit memory'}
+                      </p>
 
                       <div className="matches-list">
                         {matches.map((m, idx) => {
@@ -462,6 +537,11 @@ export default function App() {
                                     <>
                                       <small>Score</small>
                                       <strong>{m.score || 91}</strong>
+                                      {demoMode !== 'baseline' && m.memoryInsights?.scoreAdjustment !== undefined && m.memoryInsights.scoreAdjustment !== 0 && (
+                                        <span className={`tiny-adj ${m.memoryInsights.scoreAdjustment > 0 ? 'text-green' : 'text-amber'}`}>
+                                          {m.memoryInsights.scoreAdjustment > 0 ? `+${m.memoryInsights.scoreAdjustment}` : m.memoryInsights.scoreAdjustment} mem
+                                        </span>
+                                      )}
                                     </>
                                   )}
                                   {isPartial && (
@@ -486,6 +566,12 @@ export default function App() {
                                     {r}
                                   </p>
                                 ))}
+                                {demoMode !== 'baseline' && m.memoryInsights?.hasHistory && (
+                                  <div className="match-memory-note">
+                                    <Sparkles size={13} className="green-icon" />
+                                    <span>{m.memoryInsights.explanation}</span>
+                                  </div>
+                                )}
                               </div>
 
                               <div className="match-card-actions">
@@ -1156,6 +1242,9 @@ export default function App() {
           }}
         />
       )}
+
+      {/* AI COPILOT MODAL */}
+      {showAi && <AiCopilot onClose={() => setShowAi(false)} />}
     </div>
   );
 }

@@ -83,6 +83,7 @@ FoodBridge solves this with a **deterministic, safety-first matching engine**:
 | **Impact Dashboard** | **Implemented (MVP)** | Confirmed delivered meals, kg rescued, deliveries, estimated CO2e avoided (`kg * 2.5`), Recharts timeline. |
 | **Interactive Map** | **Implemented (MVP)** | Leaflet + OpenStreetMap tiles with mock Delhi coordinates, venue pins, NGO color-coded markers, travel polylines. |
 | **Standalone Demo Engine** | **Implemented (MVP)** | 100% browser-based demo engine (`client/src/demoEngine.ts`) with `localStorage` persistence, seeded Delhi demo data, safety filter, matching engine, and 1-click Reset Demo — requires zero backend servers, databases, or API keys. |
+| **AI Copilot & Memory Insights** | **Implemented (MVP)** | Hindsight-backed memory service (`server/services/hindsight.js`), AI Copilot (`client/src/AiCopilot.tsx`), and Memory Insights Panel (`client/src/MemoryInsightsPanel.tsx`) for historical rescue recommendations and patterns. |
 | **Database & Concurrency** | **Implemented (MVP)** | Optional Express + MongoDB backend (`server/`) with ephemeral replica set (`mongodb-memory-server`) or Atlas; atomic `findOneAndUpdate` prevents double accepts. |
 | **Automated Testing** | **Implemented (MVP)** | 19 Vitest unit and integration tests covering the 40-meal scenario, safety filters, atomic accept, and state transitions. |
 | **Authentication** | **Simulated (MVP)** | Demo login role switcher in topbar (`Organizer: Sample Wedding Caterer`, `NGO A` to `NGO G`). *Firebase Auth is planned.* |
@@ -167,6 +168,10 @@ MONGODB_URI=
 PORT=4000
 DEMO_MODE=true
 CLIENT_ORIGIN=http://localhost:5173
+# Optional: Hindsight Memory Configuration (for AI Copilot & Memory Insights)
+HINDSIGHT_API_URL=https://api.hindsight.vectorize.io
+HINDSIGHT_API_KEY=your_hindsight_api_key_here
+HINDSIGHT_BANK_ID=foodbridge
 ```
 *(Leave `MONGODB_URI` empty to use the zero-configuration embedded MongoDB replica set).*
 
