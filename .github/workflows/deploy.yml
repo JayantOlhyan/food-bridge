@@ -1,0 +1,63 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Deployment target (netlify, render, or all)
+        required: false
+        default: all
+        type: choice
+        options:
+          - all
+          - netlify
+          - render
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Pre-deploy Verification Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+
+  deploy-netlify:
+    name: Deploy Static Demo to Netlify
+    needs: verify
+    if: ${{ (github.event_name == 'push' || inputs.target == 'all' || inputs.target == 'netlify') && secrets.NETLIFY_AUTH_TOKEN != '' && secrets.NETLIFY_SITE_ID != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Deploy to Netlify Production
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx netlify-cli deploy --prod --dir=client/dist
+
+  deploy-render:
+    name: Trigger Full-Stack Render Deploy
+    needs: verify
+    if: ${{ (github.event_name == 'push' || inputs.target == 'all' || inputs.target == 'render') && secrets.RENDER_DEPLOY_HOOK_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy Hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL"
