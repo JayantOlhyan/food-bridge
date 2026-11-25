@@ -16,7 +16,7 @@ When `localStorage` throws or is unavailable (such as in Node Vitest workers or 
 
 ## Simulated API Dispatch
 
-`handleDemoApi(path, body)` parses REST-equivalent paths (`/bootstrap`, `/listings`, `/matches`, `/accept`, `/collect`, `/deliver`, `/cancel`, `/impact`, `/ai/*`, `/demo/reset`).
+`handleDemoApi(path, body)` parses REST-equivalent paths (`/bootstrap`, `/listings`, `/listings/:id/matches`, `/ngo/:id/feed`, `/listings/:id/accept`, `/listings/:id/cancel`, `/pickups`, `/pickups/:id/collect`, `/pickups/:id/deliver`, `/notifications`, `/impact`, `/demo/reset`).
 
 ## Parity with Server Rules
 
