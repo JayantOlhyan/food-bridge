@@ -5,10 +5,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Clock,
-  Truck,
   Layers,
-  Award,
-  ArrowRight,
   TrendingDown,
   FileCheck
 } from 'lucide-react';
@@ -68,13 +65,6 @@ export default function PruneOptimizationPanel({
   const eligibleBaselineMatches = safeBaselineMatches.filter(m => Boolean(m && m.feasible && m.matchType === 'Full match'));
 
   const topPruneCandidate = eligiblePruneMatches[0] || null;
-  const topBaselineCandidate = eligibleBaselineMatches[0] || null;
-  const rankChanged = Boolean(
-    topPruneCandidate &&
-    topBaselineCandidate &&
-    topPruneCandidate.ngoId !== topBaselineCandidate.ngoId
-  );
-
   const activeCandidate = eligiblePruneMatches.find(m => m.ngoId === (selectedNgoId || topPruneCandidate?.ngoId)) || topPruneCandidate;
 
   return (

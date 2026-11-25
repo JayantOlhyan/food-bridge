@@ -11,7 +11,6 @@ import {config} from './config.js';
 import {eligibility,match,urgency} from './services/matching.js';
 import {seed} from './scripts/seed-data.js';
 import {
-  pruneMetrics,
   getPruneMetrics,
   askPruneCopilot,
   optimizeListingWithPrune,

@@ -89,7 +89,7 @@ function recordReceipt({
 /**
  * Generate smart deterministic dispatch answer when in demo mode or without live API key
  */
-function generateSmartDispatchResponse(query, context = '') {
+function generateSmartDispatchResponse(query, _context = '') {
   const q = query.toLowerCase();
 
   if (q.includes('impact') || q.includes('co2') || q.includes('metric') || q.includes('carbon') || q.includes('emission') || q.includes('offset')) {
@@ -293,7 +293,7 @@ export async function optimizeListingWithPrune(listing) {
 /**
  * Enrich Matches with Prune Optimization Insights
  */
-export async function enrichMatchesWithPrune(listing, matches, options = {}) {
+export async function enrichMatchesWithPrune(listing, matches, _options = {}) {
   if (!Array.isArray(matches)) return [];
 
   const enriched = matches.map(m => {
